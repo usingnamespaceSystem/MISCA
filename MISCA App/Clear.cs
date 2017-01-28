@@ -11,6 +11,8 @@ namespace MISCA_App
     {
         void clear()
         {
+            load = true;
+
             images.RemoveRange(0, (images.Count != 0) ? images.Count - 1 : 0);
 
             images.Clear();

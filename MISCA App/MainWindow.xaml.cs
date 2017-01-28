@@ -13,9 +13,6 @@ namespace MISCA_App
             get_curency();
         }
 
-        private void button_Click(object sender, RoutedEventArgs e)
-        {
-           Clipboard.SetText(WebControl.ExecuteJavascriptWithResult("getElementsByTagName('html')[0].innerHTML"));
-        }
+
     }
 }

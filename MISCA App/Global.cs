@@ -35,6 +35,7 @@ namespace MISCA_App
         List<CheckingWB> images = new List<CheckingWB>();
         float usd;
         bool load = true;
+        string imagesHidden = string.Empty;
 
     }
 }

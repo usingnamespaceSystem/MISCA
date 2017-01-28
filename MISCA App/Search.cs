@@ -1,6 +1,8 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using System.Net;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows;
 
@@ -13,7 +15,7 @@ namespace MISCA_App
         /// </summary>
         private void Findname()
         {
-            Regex name_tao = new Regex("<span itemprop=" + '\u0022' + "name" + '\u0022' + " " + "class=" + '\u0022' + "t-title" + '\u0022' + @">(.+)" + "</span>");
+            Regex name_tao = new Regex("<span " + "class=\"t-title\" itemprop=\"name\"" + @">(.+)" + "</span>");
             Regex name_world_tmall = new Regex("<h1 data-spm=\"1000983\">\n" + "(.+)" + "\n</h1>");
             Regex script = new Regex("<title>" + @"(.+)" + "-tmall.com");
 
@@ -82,10 +84,10 @@ namespace MISCA_App
         /// Получение материала товара из HTML на TMALL
         /// </summary> 
         private void Findmaterial()
-        { 
+        {
             Regex material1_tmall = new Regex("<li title=\"" + @"(.+)" + "\">Ткань:" + @".+" + "</li>");
-            Regex material2_tmall = new Regex("<li title=\"&nbsp;" + @"(.+)" + "\">金属材质:&nbsp;" + @".+" + "</li>");
-            Regex material3_tao = new Regex("<li title=\"" + @" (.+)" + "\">\n面料 : " + @".+" + "\n</li>");
+            Regex material2_tmall = new Regex("<li title=\" " + @"(.+)" + "\">Материальный компонент: " + @".+" + "</li>");
+            Regex material3_tao = new Regex("<li title=\"" + @" (.+)" + "\">\nТкань : " + @".+" + "\n</li>");
 
             MatchCollection matches_material1_tmall = material1_tmall.Matches(content);
             MatchCollection matches_material2_tmall = material2_tmall.Matches(content);
@@ -113,13 +115,24 @@ namespace MISCA_App
         /// </summary>
         private void Get_images()
         {
+            Regex descURLtao = new Regex("descUrl: \"" + @"(.{140,150})" + "\"");
+            Regex descURLtmall = new Regex("{\"descUrl\":\"" + @"(.{155,165})" + "\",");
+            MatchCollection matchURLtao = descURLtao.Matches(content);
+            MatchCollection matchURLtmall = descURLtmall.Matches(content);
+            WebClient wb = new WebClient();
+
+            if(matchURLtao.Count >0)
+                imagesHidden = wb.DownloadString(new Uri("http:"+matchURLtao[0].Groups[1].ToString()));
+            if (matchURLtmall.Count > 0)
+                imagesHidden = wb.DownloadString(new Uri("http:" + matchURLtmall[0].Groups[1].ToString()));
+
             Regex img_tmall = new Regex("data-ks-lazyload=\"https:" + "//img.alicdn.com/" + @"(.{50,80})" + ".jpg\">");
             Regex img_tmall2 = new Regex("//img.alicdn.com/" + @"(.{50,80})" + ".jpg\">");
             Regex img_tao = new Regex("//img.alicdn.com/" + @"(.{50,80})" + ".gif\">");
 
-            MatchCollection matches_img_tmall = img_tmall.Matches(content);
-            MatchCollection matches_img_tao = img_tao.Matches(content);
-            MatchCollection matches_img_tmall2 = img_tmall2.Matches(content);
+            MatchCollection matches_img_tmall = img_tmall.Matches(imagesHidden);
+            MatchCollection matches_img_tao = img_tao.Matches(imagesHidden);
+            MatchCollection matches_img_tmall2 = img_tmall2.Matches(imagesHidden);
 
             if (matches_img_tmall.Count > 0)
             {
@@ -163,7 +176,7 @@ namespace MISCA_App
                 }
             }
 
-            
+
         }
     }
 }

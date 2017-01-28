@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Awesomium.Core;
+using System;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -15,7 +17,7 @@ namespace MISCA_App
         private void fusropars_Click(object sender, RoutedEventArgs e)
         {
             clear();
-            WebControl.Dispatcher.BeginInvoke(new Translation(TranslateText));
+            TranslateText();
         }
 
         private void link_KeyDown(object sender, KeyEventArgs e)
@@ -37,28 +39,15 @@ namespace MISCA_App
             WebControl.Reload(true);
         }
 
-        private async void WebControl_LoadingFrameComplete(object sender, Awesomium.Core.FrameEventArgs e)
+        private void WebControl_LoadingFrameComplete(object sender, Awesomium.Core.FrameEventArgs e)
         {
             if (load)
             {
-                await Task.Factory.StartNew<int>(
-                                        () =>
-                                        {
-                                            WebControl.Dispatcher.BeginInvoke(new Action(delegate ()
-                                            {
-                                                WebControl.ExecuteJavascriptWithResult("window.scrollTo(0,1500)");                         
+                Thread.Sleep(500);
 
-                                                WebControl.ExecuteJavascriptWithResult("window.scrollTo(0,4000)");
+                content = WebControl.ExecuteJavascriptWithResult("document.getElementsByTagName('html')[0].innerHTML");
 
-                                                Task.Delay(500).Wait();
-
-                                                content = WebControl.ExecuteJavascriptWithResult("document.getElementsByTagName('html')[0].innerHTML");
-
-                                                Get_images();
-                                            }));
-                                            return 1;
-                                        },
-                                        TaskCreationOptions.LongRunning);
+                Get_images();
 
                 status.Content = "Загрузка завершена";
 
@@ -73,8 +62,6 @@ namespace MISCA_App
                 load = false;
             }
         }
-
-
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
