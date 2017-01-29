@@ -1,8 +1,6 @@
 ﻿using System;
-using System.IO;
 using System.Linq;
 using System.Net;
-using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows;
 
@@ -125,10 +123,10 @@ namespace MISCA_App
                 imagesHidden = wb.DownloadString(new Uri("http:"+matchURLtao[0].Groups[1].ToString()));
             if (matchURLtmall.Count > 0)
                 imagesHidden = wb.DownloadString(new Uri("http:" + matchURLtmall[0].Groups[1].ToString()));
-
+           
             Regex img_tmall = new Regex("data-ks-lazyload=\"https:" + "//img.alicdn.com/" + @"(.{50,80})" + ".jpg\">");
-            Regex img_tmall2 = new Regex("//img.alicdn.com/" + @"(.{50,80})" + ".jpg\">");
-            Regex img_tao = new Regex("//img.alicdn.com/" + @"(.{50,80})" + ".gif\">");
+            Regex img_tmall2 = new Regex("//img.alicdn.com/" + @"(.{50,80})" + ".jpg\"");
+            Regex img_tao = new Regex("//img.alicdn.com/" + @"(.{50,80})" + ".gif\"");
 
             MatchCollection matches_img_tmall = img_tmall.Matches(imagesHidden);
             MatchCollection matches_img_tao = img_tao.Matches(imagesHidden);

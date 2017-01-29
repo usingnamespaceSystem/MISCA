@@ -8,7 +8,7 @@
         xmlns:awe="http://schemas.awesomium.com/winfx" x:Class="MISCA_App.MainWindow"
         
         mc:Ignorable="d"
-        Title="MainWindow" Height="897.758" Width="1168" Closing="Window_Closing" Loaded="Window_Loaded">
+        Title="MISCA APP" Height="897.758" Width="1168" Closing="Window_Closing" Loaded="Window_Loaded" Icon="success.ico">
     <Grid KeyDown="link_KeyDown">
         <Grid.RowDefinitions>
             <RowDefinition/>
@@ -76,7 +76,7 @@
             <TextBox x:Name="final_price" Height="22" TextWrapping="Wrap" Width="90" KeyDown="final_price_KeyDown"/>
             <Button x:Name="save" Content="Добавить" Height="22" VerticalAlignment="Top" Width="129" Margin="5,18" Click="save_Click"/>
         </WrapPanel>
-        <Label x:Name="status" Content="" HorizontalAlignment="Left" Margin="1019,832,0,0" VerticalAlignment="Top" Width="131"/>
+        <Label x:Name="status" Content="" Margin="0,0,10,9" HorizontalAlignment="Right" Width="131" Height="26" VerticalAlignment="Bottom"/>
 
     </Grid>
 </Window>

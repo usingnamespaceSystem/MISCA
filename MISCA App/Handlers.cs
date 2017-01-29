@@ -1,11 +1,8 @@
-﻿using Awesomium.Core;
-using System;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-
+using System.Diagnostics;
 
 namespace MISCA_App
 {
@@ -41,15 +38,11 @@ namespace MISCA_App
 
         private void WebControl_LoadingFrameComplete(object sender, Awesomium.Core.FrameEventArgs e)
         {
-            if (load)
+            status.Content = "Загрузка завершена";
+
+            if (isload)
             {
-                Thread.Sleep(500);
-
                 content = WebControl.ExecuteJavascriptWithResult("document.getElementsByTagName('html')[0].innerHTML");
-
-                Get_images();
-
-                status.Content = "Загрузка завершена";
 
                 Findname();
 
@@ -59,7 +52,9 @@ namespace MISCA_App
 
                 Findmaterial();
 
-                load = false;
+                Get_images();
+               
+                isload = false;
             }
         }
 
@@ -67,6 +62,11 @@ namespace MISCA_App
         {
             wb.Close(true);
             app.Quit();
+
+            foreach (var process in Process.GetProcessesByName("EXCEL"))
+            {
+                process.Kill();
+            }
         }
 
         private void forward_Click(object sender, RoutedEventArgs e)

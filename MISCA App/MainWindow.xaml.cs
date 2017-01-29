@@ -13,6 +13,9 @@ namespace MISCA_App
             get_curency();
         }
 
-
+        private void again(object sender, RoutedEventArgs e)
+        {
+            Get_images();
+        }
     }
 }
