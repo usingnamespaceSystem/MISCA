@@ -11,27 +11,33 @@ namespace MISCA_App
     {
         private void addGoods()
         {
-            var uploadServer = vk.Photo.GetMarketUploadServer(46499802, true, 0, 0, 600);
+            var uploadServer = vk.Photo.GetMarketUploadServer(46499802, true, 150, 100, 500);
             var wc = new WebClient();
             var responseImg = Encoding.ASCII.GetString(wc.UploadFile(uploadServer.UploadUrl, AppDomain.CurrentDomain.BaseDirectory + @"\Изображения\main.jpg"));
             var photo = vk.Photo.SaveMarketPhoto(46499802, responseImg);
             wc.Dispose();
 
-            while(count < i)
-            { 
-                var extra_wc = new WebClient();
-                var img = Encoding.ASCII.GetString(extra_wc.UploadFile(uploadServer.UploadUrl, AppDomain.CurrentDomain.BaseDirectory + @"\Изображения\"+ count + ".jpg"));
-                var id = vk.Photo.SaveMarketPhoto(46499802, img);
-                extraPhotos[count - 1] = id.FirstOrDefault().Id.Value;
-                wc.Dispose();
-                count++;
+            while (count < 5)
+            {
+                try
+                {
+                    var extra_wc = new WebClient();
+                    var img = Encoding.ASCII.GetString(extra_wc.UploadFile(uploadServer.UploadUrl, AppDomain.CurrentDomain.BaseDirectory + @"\Изображения\" + count + ".jpg"));
+                    var id = vk.Photo.SaveMarketPhoto(46499802, img);
+                    extraPhotos[count - 1] = id.FirstOrDefault().Id.Value;
+                    wc.Dispose();
+                    count++;
+                }
+                catch { count++; }
             }
 
             string descr = string.Empty;
-            if (size.Text != string.Empty)
-                descr += "Размеры: " + size.Text + "\n";
+
             if (material.Text != string.Empty)
                 descr += "Материал: " + material.Text + "\n";
+            if (size.Text != string.Empty)
+                descr += "Размеры: " + size.Text + "\n";
+
 
             var add = vk.Markets.Add(new MarketProductParams
             {
@@ -41,7 +47,7 @@ namespace MISCA_App
                 Deleted = false,
                 Name = (Convert.ToInt32(ws.Cells[rowIdx - 1, 1].Value) + 1).ToString() + " " + name.Text,
                 Description = descr,
-                Price = Convert.ToDecimal(final_price.Text),
+                Price = Convert.ToDecimal(ws.Cells[rowIdx, 11].Value),
                 PhotoIds = extraPhotos
 
             });

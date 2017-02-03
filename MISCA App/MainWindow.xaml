@@ -8,7 +8,7 @@
         xmlns:awe="http://schemas.awesomium.com/winfx" x:Class="MISCA_App.MainWindow"
         
         mc:Ignorable="d"
-        Title="MISCA APP" Height="897.758" Width="1168" Closing="Window_Closing" Loaded="Window_Loaded" Icon="success.ico">
+        Title="MISCA APP" Height="897.758" Width="1168" Closing="Window_Closing" Loaded="Window_Loaded" Icon="bowl.ico">
     <Grid KeyDown="link_KeyDown">
         <Grid.RowDefinitions>
             <RowDefinition/>
@@ -66,17 +66,19 @@
             <Label x:Name="label6" Content="Размер" HorizontalAlignment="Center" VerticalAlignment="Center" Width="70"/>
             <TextBox x:Name="size" Height="22" TextWrapping="Wrap" Width="299"/>
             <Label x:Name="label3" Content="Цена" HorizontalAlignment="Center" VerticalAlignment="Center" Width="70"/>
-            <TextBox x:Name="price" Height="22" TextWrapping="Wrap" Width="50" TextChanged="price_changed" KeyDown="price_KeyDown"/>
+            <TextBox x:Name="price" Height="22" TextWrapping="Wrap" Width="40" TextChanged="price_changed" KeyDown="price_KeyDown"/>
             <Label x:Name="label3_Copy" Content="+" HorizontalAlignment="Center" VerticalAlignment="Center" Width="22"/>
-            <TextBox x:Name="perc" Height="22" TextWrapping="Wrap" Width="30" TextChanged="perc_changed" KeyDown="perc_KeyDown"/>
+            <TextBox x:Name="perc" Height="22" TextWrapping="Wrap" Width="24" TextChanged="perc_changed" KeyDown="perc_KeyDown"/>
             <Label x:Name="label3_Copy1" Content="%  +" HorizontalAlignment="Center" VerticalAlignment="Center" Width="38"/>
-            <TextBox x:Name="ship" Height="22" TextWrapping="Wrap" Text="700" Width="50" TextChanged="ship_TextChanged" KeyDown="ship_KeyDown"/>
+            <TextBox x:Name="ship" Height="22" TextWrapping="Wrap" Text="700" Width="38" TextChanged="ship_TextChanged" KeyDown="ship_KeyDown"/>
 
             <Label x:Name="label3_Copy2" Content="=" HorizontalAlignment="Center" VerticalAlignment="Center" Width="19"/>
-            <TextBox x:Name="final_price" Height="22" TextWrapping="Wrap" Width="90" KeyDown="final_price_KeyDown"/>
+            <TextBox x:Name="final_price" Height="22" TextWrapping="Wrap" Width="55" KeyDown="final_price_KeyDown"/>
+            <Label x:Name="price1" Content="" HorizontalAlignment="Center" VerticalAlignment="Center" Width="56" Margin="5,0"/>
             <Button x:Name="save" Content="Добавить" Height="22" VerticalAlignment="Top" Width="129" Margin="5,18" Click="save_Click"/>
         </WrapPanel>
-        <Label x:Name="status" Content="" Margin="0,0,10,9" HorizontalAlignment="Right" Width="131" Height="26" VerticalAlignment="Bottom"/>
+        <Label x:Name="status" Content="" Margin="0,0,10,4" Height="32" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="131"/>
+        <Label x:Name="img_checking_count" Content="0" HorizontalAlignment="Center" VerticalAlignment="Center" Width="30" Margin="342,0,788,805" Panel.ZIndex="100" Height="62"/>
 
     </Grid>
 </Window>

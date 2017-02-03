@@ -3,6 +3,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Diagnostics;
+using System.IO;
 
 namespace MISCA_App
 {
@@ -13,7 +14,13 @@ namespace MISCA_App
         /// </summary>
         private void fusropars_Click(object sender, RoutedEventArgs e)
         {
+            try { get_curency(); }
+            catch { cny=8.7; };
             clear();
+            foreach (FileInfo file in dirInfo.GetFiles())
+            {
+                file.Delete();
+            }
             TranslateText();
         }
 
@@ -60,13 +67,24 @@ namespace MISCA_App
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
+
+            foreach (FileInfo file in dirInfo.GetFiles())
+            {
+                file.Delete();
+            }
+
             wb.Close(true);
+
             app.Quit();
 
-            foreach (var process in Process.GetProcessesByName("EXCEL"))
+            try
             {
-                process.Kill();
+                foreach (var process in Process.GetProcessesByName("EXCEL"))
+                {
+                    process.Kill();
+                }
             }
+            catch { }
         }
 
         private void forward_Click(object sender, RoutedEventArgs e)
@@ -82,13 +100,30 @@ namespace MISCA_App
         private void price_changed(object sender, TextChangedEventArgs e)
         {
             if (price.Text != String.Empty && perc.Text != String.Empty && ship.Text != String.Empty)
-                final_price.Text = Math.Round(((Convert.ToDouble(price.Text) * 0.15 * (1.0 + Convert.ToDouble(perc.Text) / 100.0) + 10) * usd + Convert.ToDouble(ship.Text)), 0).ToString();
+            {
+                final_price.Text = Math.Round(((Convert.ToDouble(price.Text) * (1.07 + Convert.ToDouble(perc.Text) / 100.0) + 20) * cny + Convert.ToDouble(ship.Text)), 0).ToString();
+                price1.Content = "(" + Math.Round(((Convert.ToDouble(price.Text) * 1.07 + 20) * cny + Convert.ToDouble(ship.Text)), 0).ToString() + ")";
+            }
+
         }
 
         private void ship_TextChanged(object sender, TextChangedEventArgs e)
         {
             if (price.Text != String.Empty && perc.Text != String.Empty && ship.Text != String.Empty)
-                final_price.Text = Math.Round(((Convert.ToDouble(price.Text) * 0.15 * (1 + Convert.ToDouble(perc.Text) / 100) + 10) * usd + Convert.ToDouble(ship.Text)), 0).ToString();
+            {
+                final_price.Text = Math.Round(((Convert.ToDouble(price.Text) * (1.07 + Convert.ToDouble(perc.Text) / 100.0) + 20) * cny + Convert.ToDouble(ship.Text)), 0).ToString();
+                price1.Content = "(" + Math.Round(((Convert.ToDouble(price.Text) * 1.07 + 20) * cny + Convert.ToDouble(ship.Text)), 0).ToString() + ")";
+            }
+           
+        }
+
+        private void perc_changed(object sender, TextChangedEventArgs e)
+        {
+            if (price.Text != String.Empty && perc.Text != String.Empty && ship.Text != String.Empty)
+            {
+                final_price.Text = Math.Round(((Convert.ToDouble(price.Text) * (1.07 + Convert.ToDouble(perc.Text) / 100.0) + 20) * cny + Convert.ToDouble(ship.Text)), 0).ToString();
+                price1.Content = "(" + Math.Round(((Convert.ToDouble(price.Text) * 1.07 + 20) * cny + Convert.ToDouble(ship.Text)), 0).ToString() + ")";
+            }
         }
 
         private void WebControl_LoadingFrame(object sender, Awesomium.Core.LoadingFrameEventArgs e)
@@ -99,12 +134,6 @@ namespace MISCA_App
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             Auth();
-        }
-
-        private void perc_changed(object sender, TextChangedEventArgs e)
-        {
-            if (price.Text != String.Empty && perc.Text != String.Empty && ship.Text != String.Empty)
-                final_price.Text = Math.Round(((Convert.ToDouble(price.Text) * 0.15 * (1 + Convert.ToDouble(perc.Text) / 100) + 10) * usd + Convert.ToDouble(ship.Text)), 0).ToString();
         }
 
         private void price_KeyDown(object sender, KeyEventArgs e)

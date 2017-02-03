@@ -10,6 +10,8 @@ namespace MISCA_App
     {
         private void save_Click(object sender, RoutedEventArgs e)
         {
+            i = 1;
+
             WebClient wc = new WebClient();
 
             foreach (CheckingWB cwb in images)
@@ -44,14 +46,14 @@ namespace MISCA_App
             ws.Cells[rowIdx, 8].Value = price.Text;
             ws.Cells[rowIdx, 9].Value = perc.Text;
             ws.Cells[rowIdx, 10].Value = ship.Text;
-            ws.Cells[1, 14].Value = usd;
+            ws.Cells[1, 14].Value = cny;
             wb.Save();
-            
-            nf.Visible = true;
-            nf.Icon = new Icon(AppDomain.CurrentDomain.BaseDirectory + "success.ico");
-            nf.ShowBalloonTip(500, @"¯\_(ツ)_ /¯", "Товар успешно добавлен", ToolTipIcon.Info);
 
             addGoods();
+
+            nf.Visible = true;
+            nf.Icon = new Icon(AppDomain.CurrentDomain.BaseDirectory + "bowl.ico");
+            nf.ShowBalloonTip(500, @"¯\_(ツ)_ /¯", "Товар успешно добавлен", ToolTipIcon.Info);
 
             link.Focus();
 

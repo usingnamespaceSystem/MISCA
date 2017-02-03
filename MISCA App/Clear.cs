@@ -11,6 +11,8 @@ namespace MISCA_App
     {
         void clear()
         {
+            img_checking_count.Content = "0";
+
             isload = true;
 
             imagesHidden = string.Empty;
@@ -27,8 +29,6 @@ namespace MISCA_App
             foreach (TextBox c in FindVisualChildren<TextBox>(this))
                 if (!c.Name.Contains("link") && !c.Name.Contains("ship"))
                     c.Text = "";
-
-            DirectoryInfo dirInfo = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory + @"\Изображения\");
 
             foreach (FileInfo file in dirInfo.GetFiles())
             {

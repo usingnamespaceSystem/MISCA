@@ -81,8 +81,10 @@ namespace MISCA_App
         /// <summary>
         /// Получение материала товара из HTML на TMALL
         /// </summary> 
+
         private void Findmaterial()
         {
+            //Clipboard.SetText(content);
             Regex material1_tmall = new Regex("<li title=\"" + @"(.+)" + "\">Ткань:" + @".+" + "</li>");
             Regex material2_tmall = new Regex("<li title=\" " + @"(.+)" + "\">Материальный компонент: " + @".+" + "</li>");
             Regex material3_tao = new Regex("<li title=\"" + @" (.+)" + "\">\nТкань : " + @".+" + "\n</li>");
@@ -119,11 +121,11 @@ namespace MISCA_App
             MatchCollection matchURLtmall = descURLtmall.Matches(content);
             WebClient wb = new WebClient();
 
-            if(matchURLtao.Count >0)
-                imagesHidden = wb.DownloadString(new Uri("http:"+matchURLtao[0].Groups[1].ToString()));
+            if (matchURLtao.Count > 0)
+                imagesHidden = wb.DownloadString(new Uri("http:" + matchURLtao[0].Groups[1].ToString()));
             if (matchURLtmall.Count > 0)
                 imagesHidden = wb.DownloadString(new Uri("http:" + matchURLtmall[0].Groups[1].ToString()));
-           
+
             Regex img_tmall = new Regex("data-ks-lazyload=\"https:" + "//img.alicdn.com/" + @"(.{50,80})" + ".jpg\">");
             Regex img_tmall2 = new Regex("//img.alicdn.com/" + @"(.{50,80})" + ".jpg\"");
             Regex img_tao = new Regex("//img.alicdn.com/" + @"(.{50,80})" + ".gif\"");
@@ -142,6 +144,12 @@ namespace MISCA_App
 
                     img_parser.WB.Source = new Uri("https://img.alicdn.com/" + matches_img_tmall[n].Groups[1].ToString() + ".jpg");
 
+                    img_parser.checkBox.Checked += (s, e) =>
+                    { img_checking_count.Content = Convert.ToInt32(img_checking_count.Content) + 1; };
+
+                    img_parser.checkBox.Unchecked += (s, e) =>
+                    { img_checking_count.Content = Convert.ToInt32(img_checking_count.Content) - 1; };
+
                     img.Children.Add(img_parser);
                 }
             }
@@ -154,6 +162,12 @@ namespace MISCA_App
                     img_parser.Name = "img" + (n + 1).ToString();
 
                     img_parser.WB.Source = new Uri("https://img.alicdn.com/" + matches_img_tmall2[n].Groups[1].ToString() + ".jpg");
+
+                    img_parser.checkBox.Checked += (s, e) =>
+                    { img_checking_count.Content = Convert.ToInt32(img_checking_count.Content) + 1; };
+
+                    img_parser.checkBox.Unchecked += (s, e) =>
+                    { img_checking_count.Content = Convert.ToInt32(img_checking_count.Content) - 1; };
 
                     img.Children.Add(img_parser);
                 }
@@ -168,6 +182,13 @@ namespace MISCA_App
                     img_parser.Name = "img" + (n + 1).ToString();
 
                     img_parser.WB.Source = new Uri("https://img.alicdn.com/" + matches_img_tao[n].Groups[1].ToString() + ".gif");
+
+                    img_parser.checkBox.Checked += (s, e) =>
+                    { img_checking_count.Content = Convert.ToInt32(img_checking_count.Content) + 1; };
+
+
+                    img_parser.checkBox.Unchecked += (s, e) =>
+                    { img_checking_count.Content = Convert.ToInt32(img_checking_count.Content) - 1; };
 
                     img.Children.Add(img_parser);
 

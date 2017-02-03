@@ -10,7 +10,7 @@ namespace MISCA_App
         {
             using (XmlTextReader reader = new XmlTextReader("http://www.cbr.ru/scripts/XML_daily.asp"))
             {
-                string USDXml = "";
+                string CNYXml = "";
 
                 while (reader.Read())
                 {
@@ -22,10 +22,10 @@ namespace MISCA_App
                             {
                                 while (reader.MoveToNextAttribute())
                                 {
-                                    if (reader.Name == "ID" && reader.Value == "R01235")
+                                    if (reader.Name == "ID" && reader.Value == "R01375")
                                     {
                                         reader.MoveToElement();
-                                        USDXml = reader.ReadOuterXml();
+                                        CNYXml = reader.ReadOuterXml();
                                     }
                                 }
                             }
@@ -33,11 +33,11 @@ namespace MISCA_App
                     }
                 }
 
-                XmlDocument usdXmlDocument = new XmlDocument();
-                usdXmlDocument.LoadXml(USDXml);
-                XmlNode xmlNode = usdXmlDocument.SelectSingleNode("Valute/Value");
-                usd = Convert.ToSingle(xmlNode.InnerText);
-                status.Content = "Курс: " + usd.ToString();
+                XmlDocument cnyXmlDocument = new XmlDocument();
+                cnyXmlDocument.LoadXml(CNYXml);
+                XmlNode xmlNode = cnyXmlDocument.SelectSingleNode("Valute/Value");
+                cny = Convert.ToDouble(xmlNode.InnerText) / 10.0;
+                status.Content = "Курс: " + cny.ToString();
             }
         }
     }
