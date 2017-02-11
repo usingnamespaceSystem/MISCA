@@ -11,6 +11,8 @@ namespace MISCA_App
     {
         void clear()
         {
+            nf.Visible = false;
+
             img_checking_count.Content = "0";
 
             isload = true;

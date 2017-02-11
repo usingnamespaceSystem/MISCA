@@ -52,6 +52,9 @@ namespace MISCA_App
         /// <returns></returns>
         string features_translation(string feature)
         {
+            if (feature == string.Empty)
+                return feature;
+
             string result = translate(feature, "zh", "ru");
             HtmlAgilityPack.HtmlDocument doc = new HtmlAgilityPack.HtmlDocument();
             doc.LoadHtml(result);
@@ -76,6 +79,9 @@ namespace MISCA_App
         /// <returns></returns>
         public string translate(string word, string SL, string DL)
         {
+            if (word == string.Empty)
+                return string.Empty;
+
             CookieContainer cookies = new CookieContainer();
             string result;
             ServicePointManager.Expect100Continue = false;

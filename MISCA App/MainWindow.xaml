@@ -75,7 +75,8 @@
             <Label x:Name="label3_Copy2" Content="=" HorizontalAlignment="Center" VerticalAlignment="Center" Width="19"/>
             <TextBox x:Name="final_price" Height="22" TextWrapping="Wrap" Width="55" KeyDown="final_price_KeyDown"/>
             <Label x:Name="price1" Content="" HorizontalAlignment="Center" VerticalAlignment="Center" Width="56" Margin="5,0"/>
-            <Button x:Name="save" Content="Добавить" Height="22" VerticalAlignment="Top" Width="129" Margin="5,18" Click="save_Click"/>
+            <Button x:Name="save" x:Uid="sa" Content="Добавить" Height="22" VerticalAlignment="Top" Width="129" Margin="5,18" Click="save_Click"/>
+
         </WrapPanel>
         <Label x:Name="status" Content="" Margin="0,0,10,4" Height="32" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="131"/>
         <Label x:Name="img_checking_count" Content="0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="30" Margin="342,0,0,0" Panel.ZIndex="100" Height="62"/>

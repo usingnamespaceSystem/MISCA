@@ -14,13 +14,22 @@ namespace MISCA_App
         /// </summary>
         private void fusropars_Click(object sender, RoutedEventArgs e)
         {
-            try { get_curency(); }
-            catch { cny=8.7; };
+            try
+            {
+                get_curency();
+            }
+            catch
+            {
+                cny =8.7;
+            };
+
             clear();
+
             foreach (FileInfo file in dirInfo.GetFiles())
             {
                 file.Delete();
             }
+
             TranslateText();
         }
 
