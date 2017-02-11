@@ -17,7 +17,7 @@
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
 
-        <awe:WebControl x:Name="WebControl" Margin="356,169,43,41" LoadingFrame="WebControl_LoadingFrame" LoadingFrameComplete="WebControl_LoadingFrameComplete"/>
+        <awe:WebControl x:Name="WebControl" Margin="356,169,43,41" LoadingFrame="WebControl_LoadingFrame" LoadingFrameComplete="WebControl_LoadingFrameComplete" ScrollViewer.HorizontalScrollBarVisibility="Visible"/>
         <WrapPanel Margin="356,14,0,0" Height="155" VerticalAlignment="Top" HorizontalAlignment="Left" Width="367">
             <Label x:Name="label1" Content="Ссылка" HorizontalAlignment="Center" VerticalAlignment="Center" Width="59"/>
             <TextBox x:Name="link" Height="22" TextWrapping="NoWrap" Width="187"/>
@@ -78,7 +78,7 @@
             <Button x:Name="save" Content="Добавить" Height="22" VerticalAlignment="Top" Width="129" Margin="5,18" Click="save_Click"/>
         </WrapPanel>
         <Label x:Name="status" Content="" Margin="0,0,10,4" Height="32" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="131"/>
-        <Label x:Name="img_checking_count" Content="0" HorizontalAlignment="Center" VerticalAlignment="Center" Width="30" Margin="342,0,788,805" Panel.ZIndex="100" Height="62"/>
+        <Label x:Name="img_checking_count" Content="0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="30" Margin="342,0,0,0" Panel.ZIndex="100" Height="62"/>
 
     </Grid>
 </Window>

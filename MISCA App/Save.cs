@@ -29,7 +29,19 @@ namespace MISCA_App
 
             }
 
-            ws = wb.Sheets[category.SelectionBoxItem.ToString()];
+            if (i==1)
+            {
+                System.Windows.MessageBox.Show("Выберите изображения!");
+                return;
+            }
+
+            if (category.SelectionBoxItem.ToString()!="")
+                ws = wb.Sheets[category.SelectionBoxItem.ToString()];
+            else
+            {
+                System.Windows.MessageBox.Show("Выберите категорию!");
+                return;
+            }
 
             while (ws.Cells[rowIdx, 1].Value != null)
             {
@@ -38,7 +50,7 @@ namespace MISCA_App
            
             ws.Cells[rowIdx, 1].Value = Convert.ToInt32(ws.Cells[rowIdx - 1, 1].Value) + 1;
             ws.Cells[rowIdx, 2].Value = 1;
-            ws.Cells[rowIdx, 3].Value = WebControl.Source.ToString();
+            ws.Cells[rowIdx, 3].Value = link.Text;
             ws.Cells[rowIdx, 4].Value = name.Text;
             ws.Cells[rowIdx, 5].Value = prod.Text;
             ws.Cells[rowIdx, 6].Value = material.Text;

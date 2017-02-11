@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Net;
 using System.Text;
 using System.Windows;
+using VkNet.Model.Attachments;
 using VkNet.Model.RequestParams;
 
 namespace MISCA_App
@@ -11,7 +13,10 @@ namespace MISCA_App
     {
         private void addGoods()
         {
-            var uploadServer = vk.Photo.GetMarketUploadServer(46499802, true, 150, 100, 500);
+            WebClient extra_wc;
+            string extra_img;
+            ReadOnlyCollection<Photo> id;
+            var uploadServer = vk.Photo.GetMarketUploadServer(46499802, true, 49, 89, 700);
             var wc = new WebClient();
             var responseImg = Encoding.ASCII.GetString(wc.UploadFile(uploadServer.UploadUrl, AppDomain.CurrentDomain.BaseDirectory + @"\Изображения\main.jpg"));
             var photo = vk.Photo.SaveMarketPhoto(46499802, responseImg);
@@ -21,9 +26,9 @@ namespace MISCA_App
             {
                 try
                 {
-                    var extra_wc = new WebClient();
-                    var img = Encoding.ASCII.GetString(extra_wc.UploadFile(uploadServer.UploadUrl, AppDomain.CurrentDomain.BaseDirectory + @"\Изображения\" + count + ".jpg"));
-                    var id = vk.Photo.SaveMarketPhoto(46499802, img);
+                    extra_wc = new WebClient();
+                    extra_img = Encoding.ASCII.GetString(extra_wc.UploadFile(uploadServer.UploadUrl, AppDomain.CurrentDomain.BaseDirectory + @"\Изображения\" + count + ".jpg"));
+                    id = vk.Photo.SaveMarketPhoto(46499802, extra_img);
                     extraPhotos[count - 1] = id.FirstOrDefault().Id.Value;
                     wc.Dispose();
                     count++;
@@ -51,6 +56,13 @@ namespace MISCA_App
                 PhotoIds = extraPhotos
 
             });
+
+            uploadServer = null;
+            responseImg = null;
+            photo = null;
+            extra_img = null;
+            id = null;
+
         }
     }
 }

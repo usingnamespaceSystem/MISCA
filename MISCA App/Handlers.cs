@@ -62,6 +62,8 @@ namespace MISCA_App
                 Get_images();
                
                 isload = false;
+
+                perc.Text = "7";
             }
         }
 
