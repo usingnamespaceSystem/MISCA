@@ -98,6 +98,23 @@ namespace MISCA_App
             catch { }
         }
 
+        private void img_added_Click(object sender, RoutedEventArgs e)
+        {
+            if (i > 0 && i < 5)
+            {
+                i++;
+            }
+        }
+
+
+        private void img_deleted_Click(object sender, RoutedEventArgs e)
+        {
+            if (i > 0 && i < 5)
+            {
+                i--;
+            }
+        }
+
         private void forward_Click(object sender, RoutedEventArgs e)
         {
             WebControl.GoForward();

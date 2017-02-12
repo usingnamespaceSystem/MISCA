@@ -16,26 +16,26 @@ namespace MISCA_App
         [DllImport("Kernel32")]
         public static extern void FreeConsole();
 
-
         VkApi vk = new VkApi();
         long[] extraPhotos = new long[4];
-        int count = 1;
+
+        List<CheckingWB> images = new List<CheckingWB>();
+        double cny;
+        string imagesHidden = string.Empty;
+        bool isload = true, ismain = false;
+        int i = 1, rowIdx = 1, count = 1;
+        string content = string.Empty;
 
         NotifyIcon nf = new NotifyIcon();
-        int i = 1, rowIdx = 1;
         static Microsoft.Office.Interop.Excel.Application app = new Microsoft.Office.Interop.Excel.Application();
         Microsoft.Office.Interop.Excel.Workbook wb = app.Workbooks.Open(AppDomain.CurrentDomain.BaseDirectory + "Products.xlsx");
         Microsoft.Office.Interop.Excel.Worksheet ws;
 
         DirectoryInfo dirInfo = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory + @"\Изображения\");
+
         public delegate void Translation();
         public delegate void Link();
         public delegate void Images();
         public delegate void Loop();
-        string content = string.Empty;
-        List<CheckingWB> images = new List<CheckingWB>();
-        double cny;
-        string imagesHidden = string.Empty;
-        bool isload = true;
     }
 }

@@ -22,18 +22,14 @@ namespace MISCA_App
             var photo = vk.Photo.SaveMarketPhoto(46499802, responseImg);
             wc.Dispose();
 
-            while (count < 5)
+            while (count < i)
             {
-                try
-                {
                     extra_wc = new WebClient();
                     extra_img = Encoding.ASCII.GetString(extra_wc.UploadFile(uploadServer.UploadUrl, AppDomain.CurrentDomain.BaseDirectory + @"\Изображения\" + count + ".jpg"));
                     id = vk.Photo.SaveMarketPhoto(46499802, extra_img);
                     extraPhotos[count - 1] = id.FirstOrDefault().Id.Value;
                     wc.Dispose();
                     count++;
-                }
-                catch { count++; }
             }
 
             string descr = string.Empty;
@@ -62,6 +58,8 @@ namespace MISCA_App
             photo = null;
             extra_img = null;
             id = null;
+            for (int i1 = 0; i1 < extraPhotos.Length - 1; i1++)
+                extraPhotos[i1] = 0;
 
         }
     }
