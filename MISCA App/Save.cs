@@ -27,10 +27,7 @@ namespace MISCA_App
                     if (cwb.checkBox.IsChecked.Value)
                     {
                         if (cwb.main.IsChecked == true)
-                        {
                             wc.DownloadFile(cwb.WB.Source, AppDomain.CurrentDomain.BaseDirectory + @"\Изображения\main.jpg");
-                            ismain = true;
-                        }
                         else
                         {
                             wc.DownloadFile(cwb.WB.Source, AppDomain.CurrentDomain.BaseDirectory + @"\Изображения\" + i + ".jpg");
@@ -38,17 +35,6 @@ namespace MISCA_App
                         }
                     }
 
-                }
-                if (i==1)
-                {
-                    MessageBox.Show("Выберите изображения");
-                    return;
-                }
-
-                if (!ismain)
-                {
-                    MessageBox.Show("Выберите главное изображение");
-                    return;
                 }
 
                 ws = wb.Sheets[category.SelectionBoxItem.ToString()];

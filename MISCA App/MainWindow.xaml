@@ -57,7 +57,7 @@
             <Button x:Name="forward" Content="→" HorizontalAlignment="Left" Height="22" VerticalAlignment="Top" Width="24" Margin="5,5" Click="forward_Click"/>
 
         </WrapPanel>
-        <ScrollViewer HorizontalAlignment="Left"  Margin="10,33,0,10" VerticalScrollBarVisibility="Auto" Width="326">
+        <ScrollViewer HorizontalAlignment="Left"  Margin="10,10,0,10" VerticalScrollBarVisibility="Auto" Width="326">
             <StackPanel x:Name="img" ForceCursor="True" OverridesDefaultStyle="True" />
         </ScrollViewer>
         <WrapPanel Margin="745,22,0,0" Height="147" VerticalAlignment="Top" HorizontalAlignment="Left" Width="372">
@@ -79,9 +79,7 @@
 
         </WrapPanel>
         <Label x:Name="status" Content="" Margin="0,0,10,4" Height="32" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="131"/>
-        <Label x:Name="img_checking_count" Content="0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="30" Margin="19,2,0,0" Panel.ZIndex="100" Height="26"/>
-        <Button x:Name="img_added" Content="Доп. фото добавлено" Height="22" VerticalAlignment="Top" Margin="54,6,0,0" HorizontalAlignment="Left" Width="133" Click="img_added_Click"/>
-        <Button x:Name="img_deleted" Content="-" Height="22" VerticalAlignment="Top" Margin="192,6,0,0" HorizontalAlignment="Left" Width="30" Click="img_deleted_Click"/>
+        <Label x:Name="img_checking_count" Content="0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="30" Margin="342,0,0,0" Panel.ZIndex="100" Height="62"/>
 
     </Grid>
 </Window>
