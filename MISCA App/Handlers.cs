@@ -85,7 +85,6 @@ namespace MISCA_App
             }
 
             wb.Close(true);
-
             app.Quit();
 
             try
