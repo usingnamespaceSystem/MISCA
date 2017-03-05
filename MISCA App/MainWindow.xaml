@@ -58,7 +58,7 @@
 
         </WrapPanel>
         <ScrollViewer HorizontalAlignment="Left"  Margin="10,10,0,10" VerticalScrollBarVisibility="Auto" Width="326">
-            <StackPanel x:Name="img" ForceCursor="True" OverridesDefaultStyle="True" Height="837" />
+            <StackPanel x:Name="img" ForceCursor="True" OverridesDefaultStyle="True" />
         </ScrollViewer>
         <WrapPanel Margin="745,22,0,0" Height="147" VerticalAlignment="Top" HorizontalAlignment="Left" Width="372">
             <Label x:Name="label5" Content="Материал" HorizontalAlignment="Center" VerticalAlignment="Center" Width="70"/>
