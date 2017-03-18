@@ -25,11 +25,6 @@ namespace MISCA_App
 
             clear();
 
-            foreach (FileInfo file in dirInfo.GetFiles())
-            {
-                file.Delete();
-            }
-
             TranslateText();
         }
 
@@ -103,6 +98,7 @@ namespace MISCA_App
             if (i > 0 && i < 5)
             {
                 i++;
+                img_checking_count.Content = Convert.ToInt32(img_checking_count.Content) + 1;
             }
         }
 
@@ -112,6 +108,7 @@ namespace MISCA_App
             if (i > 0 && i < 5)
             {
                 i--;
+                img_checking_count.Content = Convert.ToInt32(img_checking_count.Content) - 1;
             }
         }
 

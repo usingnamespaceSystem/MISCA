@@ -18,8 +18,6 @@ namespace MISCA_App
                 if (name.Text.Length == 0 || final_price.Text.Length == 0)
                     MessageBox.Show("Введите имя и цену");
 
-                i = 1;
-
                 WebClient wc = new WebClient();
 
                 foreach (CheckingWB cwb in images)

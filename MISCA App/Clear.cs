@@ -38,6 +38,9 @@ namespace MISCA_App
             }
 
             nf.Visible = false;
+
+            i = 1;
+            count = 1;
         }
 
         public static IEnumerable<T> FindVisualChildren<T>(DependencyObject depObj) where T : DependencyObject
