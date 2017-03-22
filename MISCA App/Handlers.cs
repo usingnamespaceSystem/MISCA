@@ -79,7 +79,12 @@ namespace MISCA_App
                 file.Delete();
             }
 
-            wb.Close(true);
+            try
+            {
+                wb.Close(true);
+            }
+            catch (Exception)
+            { MessageBox.Show("Не удалось закрыть Excel"); }
 
             app.Quit();
 

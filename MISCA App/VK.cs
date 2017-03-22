@@ -50,7 +50,7 @@ namespace MISCA_App
                 CategoryId = 1,
                 MainPhotoId = photo.FirstOrDefault().Id.Value,
                 Deleted = false,
-                Name = (Convert.ToInt32(ws.Cells[rowIdx - 1, 1].Value) + 1).ToString() + " " + name.Text,
+                Name = name.Text +" " + (Convert.ToInt32(ws.Cells[rowIdx - 1, 1].Value) + 1).ToString(),
                 Description = descr,
                 Price = Convert.ToDecimal(ws.Cells[rowIdx, 11].Value),
                 PhotoIds = extraPhotos

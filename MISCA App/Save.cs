@@ -49,7 +49,13 @@ namespace MISCA_App
                     return;
                 }
 
-                ws = wb.Sheets[category.SelectionBoxItem.ToString()];
+
+                if (wb == null)
+                {
+                    Microsoft.Office.Interop.Excel.Workbook wb = app.Workbooks.Open(AppDomain.CurrentDomain.BaseDirectory + "Products.xlsx");
+                    Microsoft.Office.Interop.Excel.Worksheet ws;
+                }
+                    ws = wb.Sheets[category.SelectionBoxItem.ToString()];
 
 
                 while (ws.Cells[rowIdx, 1].Value != null)
