@@ -13,6 +13,21 @@ namespace MISCA_App
 
         private void save_Click(object sender, RoutedEventArgs e)
         {
+            if (wbook == null)
+            {
+
+                wbook = app.Workbooks.Open(AppDomain.CurrentDomain.BaseDirectory + "Products.xlsx");
+                MessageBox.Show("эксель перезапущен");
+            }
+
+            wsheet = wbook.Sheets[category.SelectionBoxItem.ToString()];
+
+
+            while (wsheet.Cells[rowIdx, 1].Value != null)
+            {
+                rowIdx++;
+            }
+
             try
             {
                 if (name.Text.Length == 0 || final_price.Text.Length == 0)
@@ -27,12 +42,14 @@ namespace MISCA_App
                         if (cwb.main.IsChecked == true)
                         {
                             wc.DownloadFile(cwb.WB.Source, AppDomain.CurrentDomain.BaseDirectory + @"\Изображения\main.jpg");
+                            wsheet.Cells[rowIdx, 12].Value = cwb.WB.Source;
                             ismain = true;
                         }
                         else
                         {
-                            wc.DownloadFile(cwb.WB.Source, AppDomain.CurrentDomain.BaseDirectory + @"\Изображения\" + i + ".jpg");
                             i++;
+                            wc.DownloadFile(cwb.WB.Source, AppDomain.CurrentDomain.BaseDirectory + @"\Изображения\" + i + ".jpg");
+                            wsheet.Cells[rowIdx, img_count+i].Value = cwb.WB.Source;
                         }
                     }
 
@@ -50,43 +67,29 @@ namespace MISCA_App
                 }
 
 
-                if (wb == null)
-                {
-                    Microsoft.Office.Interop.Excel.Workbook wb = app.Workbooks.Open(AppDomain.CurrentDomain.BaseDirectory + "Products.xlsx");
-                    Microsoft.Office.Interop.Excel.Worksheet ws;
-                }
-                    ws = wb.Sheets[category.SelectionBoxItem.ToString()];
+               
 
-
-                while (ws.Cells[rowIdx, 1].Value != null)
-                {
-                    rowIdx++;
-                }
-
-                ws.Cells[rowIdx, 1].Value = Convert.ToInt32(ws.Cells[rowIdx - 1, 1].Value) + 1;
-                ws.Cells[rowIdx, 2].Value = 1;
-                ws.Cells[rowIdx, 3].Value = link.Text;
-                ws.Cells[rowIdx, 4].Value = name.Text;
-                ws.Cells[rowIdx, 5].Value = prod.Text;
-                ws.Cells[rowIdx, 6].Value = material.Text;
-                ws.Cells[rowIdx, 7].Value = size.Text;
-                ws.Cells[rowIdx, 8].Value = price.Text;
-                ws.Cells[rowIdx, 9].Value = perc.Text;
-                ws.Cells[rowIdx, 10].Value = ship.Text;
-                ws.Cells[1, 14].Value = cny;
-                wb.Save();
+                wsheet.Cells[rowIdx, 1].Value = Convert.ToInt32(wsheet.Cells[rowIdx - 1, 1].Value) + 1;
+                wsheet.Cells[rowIdx, 2].Value = 1;
+                wsheet.Cells[rowIdx, 3].Value = link.Text;
+                wsheet.Cells[rowIdx, 4].Value = name.Text;
+                wsheet.Cells[rowIdx, 5].Value = prod.Text;
+                wsheet.Cells[rowIdx, 6].Value = material.Text;
+                wsheet.Cells[rowIdx, 7].Value = size.Text;
+                wsheet.Cells[rowIdx, 8].Value = price.Text;
+                wsheet.Cells[rowIdx, 9].Value = perc.Text;
+                wsheet.Cells[rowIdx, 10].Value = ship.Text;
+                wsheet.Cells[1, 18].Value = cny;
+                wbook.Save();
 
                  addGoods();
 
-                nf.Visible = true;
-                nf.Icon = new Icon(AppDomain.CurrentDomain.BaseDirectory + "bowl.ico");
-                nf.ShowBalloonTip(500, @"¯\_(ツ)_ /¯", "Товар успешно добавлен", System.Windows.Forms.ToolTipIcon.Info);
-
+                
                 link.Focus();
             }
             catch (System.Runtime.InteropServices.COMException)
             {
-                MessageBox.Show("Выберите категорию");
+                MessageBox.Show("Произошла ошибка");
             }
 
         }

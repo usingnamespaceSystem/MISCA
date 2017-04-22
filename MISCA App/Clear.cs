@@ -13,6 +13,8 @@ namespace MISCA_App
         {
             nf.Visible = false;
 
+            isImgAdded = false;
+
             img_checking_count.Content = "0";
 
             isload = true;
@@ -37,10 +39,10 @@ namespace MISCA_App
                 file.Delete();
             }
 
-            nf.Visible = false;
-
-            i = 1;
+            i = 0;
             count = 1;
+            rowIdx = 1;
+            img_count = 12;
         }
 
         public static IEnumerable<T> FindVisualChildren<T>(DependencyObject depObj) where T : DependencyObject

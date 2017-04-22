@@ -6,6 +6,7 @@ using System.Text;
 using System.Windows;
 using VkNet.Model.Attachments;
 using VkNet.Model.RequestParams;
+using System.Drawing;
 
 namespace MISCA_App
 {
@@ -16,15 +17,32 @@ namespace MISCA_App
             WebClient extra_wc;
             string extra_img;
             ReadOnlyCollection<Photo> id;
+
             var uploadServer = vk.Photo.GetMarketUploadServer(46499802, true, 49, 89, 700);
             var wc = new WebClient();
-            var responseImg = Encoding.ASCII.GetString(wc.UploadFile(uploadServer.UploadUrl, AppDomain.CurrentDomain.BaseDirectory + @"\Изображения\main.jpg"));
-            var photo = vk.Photo.SaveMarketPhoto(46499802, responseImg);
-            wc.Dispose();
+            System.Collections.ObjectModel.ReadOnlyCollection<Photo> photo;
+            String responseImg;
 
             try
             {
-                while (count < i)
+
+                responseImg = Encoding.ASCII.GetString(wc.UploadFile(uploadServer.UploadUrl, AppDomain.CurrentDomain.BaseDirectory + @"\Изображения\main.jpg"));
+                photo = vk.Photo.SaveMarketPhoto(46499802, responseImg);
+                wc.Dispose();
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show("Произошла ошибка при загрузке главного фото ВК: " + e.Message);
+                Microsoft.Office.Interop.Excel.Range rg = (Microsoft.Office.Interop.Excel.Range)wsheet.Rows[rowIdx, Type.Missing];
+                rg.Delete(Microsoft.Office.Interop.Excel.XlDeleteShiftDirection.xlShiftUp);
+                return;
+            }
+
+                if (isImgAdded) { i++; }
+
+            try
+            {
+                while (count <= i && count < 5)
                 {
                     extra_wc = new WebClient();
                     extra_img = Encoding.ASCII.GetString(extra_wc.UploadFile(uploadServer.UploadUrl, AppDomain.CurrentDomain.BaseDirectory + @"\Изображения\" + count + ".jpg"));
@@ -34,7 +52,13 @@ namespace MISCA_App
                     count++;
                 }
             }
-            catch (Exception e) { MessageBox.Show("Произошла ошибка" + e.Message); }
+            catch (Exception e)
+            {
+                MessageBox.Show("Произошла ошибка при загрузке фото ВК: " + e.Message);
+                Microsoft.Office.Interop.Excel.Range rg = (Microsoft.Office.Interop.Excel.Range)wsheet.Rows[rowIdx, Type.Missing];
+                rg.Delete(Microsoft.Office.Interop.Excel.XlDeleteShiftDirection.xlShiftUp);
+                return;
+            }
 
             string descr = string.Empty;
 
@@ -43,19 +67,31 @@ namespace MISCA_App
             if (size.Text != string.Empty)
                 descr += "Размеры: " + size.Text + "\n";
 
-
-            var add = vk.Markets.Add(new MarketProductParams
+            try
             {
-                OwnerId = -46499802,
-                CategoryId = 1,
-                MainPhotoId = photo.FirstOrDefault().Id.Value,
-                Deleted = false,
-                Name = name.Text +" " + (Convert.ToInt32(ws.Cells[rowIdx - 1, 1].Value) + 1).ToString(),
-                Description = descr,
-                Price = Convert.ToDecimal(ws.Cells[rowIdx, 11].Value),
-                PhotoIds = extraPhotos
+                var add = vk.Markets.Add(new MarketProductParams
+                {
+                    OwnerId = -46499802,
+                    CategoryId = 1,
+                    MainPhotoId = photo.FirstOrDefault().Id.Value,
+                    Deleted = false,
+                    Name = name.Text + " " + (Convert.ToInt32(wsheet.Cells[rowIdx - 1, 1].Value) + 1).ToString(),
+                    Description = descr,
+                    Price = Convert.ToDecimal(wsheet.Cells[rowIdx, 11].Value),
+                    PhotoIds = extraPhotos
 
-            });
+                });
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show("Произошла ошибка при загрузке товара ВК: " + e.Message);
+                Microsoft.Office.Interop.Excel.Range rg = (Microsoft.Office.Interop.Excel.Range)wsheet.Rows[rowIdx, Type.Missing];
+                rg.Delete(Microsoft.Office.Interop.Excel.XlDeleteShiftDirection.xlShiftUp);
+                return;
+            }
+            nf.Visible = true;
+            nf.Icon = new Icon(AppDomain.CurrentDomain.BaseDirectory + "bowl.ico");
+            nf.ShowBalloonTip(500, @"¯\_(ツ)_ /¯", "Товар успешно добавлен", System.Windows.Forms.ToolTipIcon.Info);
 
             uploadServer = null;
             responseImg = null;

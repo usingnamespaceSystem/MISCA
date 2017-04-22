@@ -23,7 +23,7 @@
             <TextBox x:Name="link" Height="22" TextWrapping="NoWrap" Width="187"/>
             <Button x:Name="fusropars" Content="FUS RO PARSE" Click="fusropars_Click" Height="22" VerticalAlignment="Top" Width="98" Margin="10"/>
             <Label x:Name="label2_Copy" Content="Категория" HorizontalAlignment="Center" VerticalAlignment="Center" Width="67"/>
-            <ComboBox x:Name="category" Width="287">
+            <ComboBox x:Name="category" Width="219">
                 <ComboBoxItem Content="Платья"/>
                 <ComboBoxItem Content="Брюки"/>
                 <ComboBoxItem Content="Джинсы"/>
@@ -39,6 +39,7 @@
                 <ComboBoxItem Content="Украшения"/>
                 <ComboBoxItem Content="Каблук"/>
             </ComboBox>
+            <CheckBox x:Name="personal" Content="Личное" Height="18" Width="66"/>
             <Label x:Name="label2" Content="Имя" HorizontalAlignment="Center" VerticalAlignment="Center" Width="67"/>
             <TextBox x:Name="name" Height="22" TextWrapping="Wrap" Width="287"/>
             <Label x:Name="label4" Content="Производитель" HorizontalAlignment="Center" VerticalAlignment="Center" Width="100"/>
@@ -57,14 +58,14 @@
             <Button x:Name="forward" Content="→" HorizontalAlignment="Left" Height="22" VerticalAlignment="Top" Width="24" Margin="5,5" Click="forward_Click"/>
 
         </WrapPanel>
-        <ScrollViewer HorizontalAlignment="Left"  Margin="10,33,0,0" VerticalScrollBarVisibility="Auto" Width="326" Height="799" VerticalAlignment="Top">
+        <ScrollViewer HorizontalAlignment="Left"  Margin="10,22,0,0" VerticalScrollBarVisibility="Auto" Width="326" Height="848" VerticalAlignment="Top">
             <StackPanel x:Name="img" ForceCursor="True" OverridesDefaultStyle="True" />
         </ScrollViewer>
         <WrapPanel Margin="745,22,0,0" Height="147" VerticalAlignment="Top" HorizontalAlignment="Left" Width="372">
             <Label x:Name="label5" Content="Материал" HorizontalAlignment="Center" VerticalAlignment="Center" Width="70"/>
             <TextBox x:Name="material" Height="22" TextWrapping="Wrap" Width="298"/>
             <Label x:Name="label6" Content="Размер" HorizontalAlignment="Center" VerticalAlignment="Center" Width="70"/>
-            <TextBox x:Name="size" Height="22" TextWrapping="Wrap" Width="299"/>
+            <TextBox x:Name="size" Height="48" TextWrapping="Wrap" Width="298"/>
             <Label x:Name="label3" Content="Цена" HorizontalAlignment="Center" VerticalAlignment="Center" Width="70"/>
             <TextBox x:Name="price" Height="22" TextWrapping="Wrap" Width="40" TextChanged="price_changed" KeyDown="price_KeyDown"/>
             <Label x:Name="label3_Copy" Content="+" HorizontalAlignment="Center" VerticalAlignment="Center" Width="22"/>
@@ -79,9 +80,9 @@
 
         </WrapPanel>
         <Label x:Name="status" Content="" Margin="0,0,10,4" Height="32" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="131"/>
-        <Label x:Name="img_checking_count" Content="0" HorizontalAlignment="Left" Width="30" Margin="18,0,0,15" Panel.ZIndex="100" Height="26" VerticalAlignment="Bottom"/>
-        <Button x:Name="img_added" Content="Доп. фото добавлено" Margin="53,0,0,15" HorizontalAlignment="Left" Width="133" Click="img_added_Click" Height="22" VerticalAlignment="Bottom"/>
-        <Button x:Name="img_deleted" Content="-" Margin="191,0,0,15" HorizontalAlignment="Left" Width="30" Click="img_deleted_Click" Height="22" VerticalAlignment="Bottom"/>
+        <Label x:Name="img_checking_count" Content="0" HorizontalAlignment="Left" Width="30" Margin="362,0,0,14" Panel.ZIndex="100" Height="26" VerticalAlignment="Bottom"/>
+        <Button x:Name="img_added" Content="Доп. фото добавлено" Margin="397,0,0,14" HorizontalAlignment="Left" Width="133" Click="img_added_Click" Height="22" VerticalAlignment="Bottom" Panel.ZIndex="100"/>
+        <Button x:Name="img_deleted" Content="-" Margin="535,0,0,14" HorizontalAlignment="Left" Width="30" Click="img_deleted_Click" Height="22" VerticalAlignment="Bottom" Panel.ZIndex="100"/>
 
     </Grid>
 </Window>

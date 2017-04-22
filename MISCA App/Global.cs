@@ -22,14 +22,14 @@ namespace MISCA_App
         List<CheckingWB> images = new List<CheckingWB>();
         double cny;
         string imagesHidden = string.Empty;
-        bool isload = true, ismain = false;
-        int i = 1, rowIdx = 1, count = 1;
+        bool isload = true, ismain = false, isImgAdded = false;
+        int i = 0, rowIdx = 1, count = 1, img_count=12;
         string content = string.Empty;
 
         NotifyIcon nf = new NotifyIcon();
         static Microsoft.Office.Interop.Excel.Application app = new Microsoft.Office.Interop.Excel.Application();
-        Microsoft.Office.Interop.Excel.Workbook wb = app.Workbooks.Open(AppDomain.CurrentDomain.BaseDirectory + "Products.xlsx");
-        Microsoft.Office.Interop.Excel.Worksheet ws;
+        Microsoft.Office.Interop.Excel.Workbook wbook = app.Workbooks.Open(AppDomain.CurrentDomain.BaseDirectory + "Products.xlsx");
+        Microsoft.Office.Interop.Excel.Worksheet wsheet;
 
         DirectoryInfo dirInfo = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory + @"\Изображения\");
 

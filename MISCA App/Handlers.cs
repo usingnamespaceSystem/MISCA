@@ -30,7 +30,12 @@ namespace MISCA_App
 
         private void link_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Key == Key.Enter)
+            if (Keyboard.IsKeyDown(Key.Enter) && Keyboard.IsKeyDown(Key.LeftShift) && size.IsFocused)
+            {
+                size.Text += "\n";
+                size.SelectionStart = size.Text.Length;
+            }
+            else if (e.Key == Key.Enter)
             {
                 link.Text = Clipboard.GetText();
                 fusropars.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
@@ -81,10 +86,11 @@ namespace MISCA_App
 
             try
             {
-                wb.Close(true);
+                wbook.Close(true);
             }
             catch (Exception)
             { MessageBox.Show("Не удалось закрыть Excel"); }
+            
 
             app.Quit();
 
@@ -102,7 +108,7 @@ namespace MISCA_App
         {
             if (i > 0 && i < 5)
             {
-                i++;
+                isImgAdded = true;
                 img_checking_count.Content = Convert.ToInt32(img_checking_count.Content) + 1;
             }
         }
@@ -112,7 +118,7 @@ namespace MISCA_App
         {
             if (i > 0 && i < 5)
             {
-                i--;
+                isImgAdded = false;
                 img_checking_count.Content = Convert.ToInt32(img_checking_count.Content) - 1;
             }
         }
