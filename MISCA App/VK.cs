@@ -7,10 +7,13 @@ using System.Windows;
 using VkNet.Model.Attachments;
 using VkNet.Model.RequestParams;
 using System.Drawing;
+using Microsoft.Office.Interop.Excel;
+using System.Collections.Generic;
+using System.IO;
 
 namespace MISCA_App
 {
-    public partial class MainWindow : Window
+    public partial class MainWindow : System.Windows.Window
     {
         private void addGoods()
         {
@@ -22,6 +25,7 @@ namespace MISCA_App
             var wc = new WebClient();
             System.Collections.ObjectModel.ReadOnlyCollection<Photo> photo;
             String responseImg;
+            long add;
 
             try
             {
@@ -35,10 +39,15 @@ namespace MISCA_App
                 MessageBox.Show("Произошла ошибка при загрузке главного фото ВК: " + e.Message);
                 Microsoft.Office.Interop.Excel.Range rg = (Microsoft.Office.Interop.Excel.Range)wsheet.Rows[rowIdx, Type.Missing];
                 rg.Delete(Microsoft.Office.Interop.Excel.XlDeleteShiftDirection.xlShiftUp);
+                i = 0;
+                foreach (FileInfo file in dirInfo.GetFiles())
+                {
+                    file.Delete();
+                }
                 return;
             }
 
-                if (isImgAdded) { i++; }
+            if (isImgAdded) { i++; }
 
             try
             {
@@ -55,8 +64,7 @@ namespace MISCA_App
             catch (Exception e)
             {
                 MessageBox.Show("Произошла ошибка при загрузке фото ВК: " + e.Message);
-                Microsoft.Office.Interop.Excel.Range rg = (Microsoft.Office.Interop.Excel.Range)wsheet.Rows[rowIdx, Type.Missing];
-                rg.Delete(Microsoft.Office.Interop.Excel.XlDeleteShiftDirection.xlShiftUp);
+                unexpected_err();
                 return;
             }
 
@@ -69,7 +77,7 @@ namespace MISCA_App
 
             try
             {
-                var add = vk.Markets.Add(new MarketProductParams
+                add = vk.Markets.Add(new MarketProductParams
                 {
                     OwnerId = -46499802,
                     CategoryId = 1,
@@ -85,14 +93,21 @@ namespace MISCA_App
             catch (Exception e)
             {
                 MessageBox.Show("Произошла ошибка при загрузке товара ВК: " + e.Message);
-                Microsoft.Office.Interop.Excel.Range rg = (Microsoft.Office.Interop.Excel.Range)wsheet.Rows[rowIdx, Type.Missing];
-                rg.Delete(Microsoft.Office.Interop.Excel.XlDeleteShiftDirection.xlShiftUp);
+                unexpected_err();
                 return;
             }
-            nf.Visible = true;
-            nf.Icon = new Icon(AppDomain.CurrentDomain.BaseDirectory + "bowl.ico");
-            nf.ShowBalloonTip(500, @"¯\_(ツ)_ /¯", "Товар успешно добавлен", System.Windows.Forms.ToolTipIcon.Info);
+                album_id.Add((Convert.ToInt64((wsheet.Cells[2, 3] as Range).Value)));
+                vk.Markets.AddToAlbum(ownerId: -46499802, itemId: add, albumIds: album_id);
 
+            //catch (Exception e)
+            //{
+            //    MessageBox.Show("Произошла ошибка при добавлении товара в подборку: " + e.Message);
+            //    return;
+            //}
+
+            nf.Visible = true;
+            nf.Icon = new System.Drawing.Icon(AppDomain.CurrentDomain.BaseDirectory + "bowl.ico");
+            nf.ShowBalloonTip(500, @"¯\_(ツ)_ /¯", "Товар успешно добавлен", System.Windows.Forms.ToolTipIcon.Info);
             uploadServer = null;
             responseImg = null;
             photo = null;
@@ -100,7 +115,18 @@ namespace MISCA_App
             id = null;
             for (int i1 = 0; i1 < extraPhotos.Length - 1; i1++)
                 extraPhotos[i1] = 0;
+        }
 
+        private void unexpected_err()
+        {
+            Microsoft.Office.Interop.Excel.Range rg = (Microsoft.Office.Interop.Excel.Range)wsheet.Rows[rowIdx, Type.Missing];
+            rg.Delete(Microsoft.Office.Interop.Excel.XlDeleteShiftDirection.xlShiftUp);
+            i = 0;
+            foreach (FileInfo file in dirInfo.GetFiles())
+            {
+                file.Delete();
+            }
         }
     }
 }
+

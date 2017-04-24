@@ -11,38 +11,33 @@ namespace MISCA_App
     {
         void clear()
         {
-            nf.Visible = false;
+            i = 0;
+            count = 1;
+            rowIdx = 1;
+            img_count = 12;
 
+            nf.Visible = false;
             isImgAdded = false;
+            isload = true;
 
             img_checking_count.Content = "0";
-
-            isload = true;
 
             imagesHidden = string.Empty;
 
             images.RemoveRange(0, (images.Count != 0) ? images.Count - 1 : 0);
 
             images.Clear();
+            album_id.Clear();
 
-            for(int i=img.Children.Count-1; i>=0;i--)
-            {
+            for (int i=img.Children.Count-1; i>=0;i--)
                 img.Children.RemoveAt(i);
-            }
 
             foreach (TextBox c in FindVisualChildren<TextBox>(this))
                 if (!c.Name.Contains("link") && !c.Name.Contains("ship"))
                     c.Text = "";
 
             foreach (FileInfo file in dirInfo.GetFiles())
-            {
                 file.Delete();
-            }
-
-            i = 0;
-            count = 1;
-            rowIdx = 1;
-            img_count = 12;
         }
 
         public static IEnumerable<T> FindVisualChildren<T>(DependencyObject depObj) where T : DependencyObject

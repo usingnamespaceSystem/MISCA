@@ -21,6 +21,7 @@ namespace MISCA_App
             catch
             {
                 cny =8.7;
+                MessageBox.Show("Курс не получен");
             };
 
             clear();
@@ -72,8 +73,33 @@ namespace MISCA_App
                
                 isload = false;
 
-                perc.Text = "7";
+                perc.Text = "20";
+
+                foreach (Microsoft.Office.Interop.Excel.Worksheet sh in wbook.Worksheets)
+                {
+                    if (sh.Name.Contains("nul"))
+                        break;
+
+                    for (int n = 0; n < key_words.Length; n++)
+                    {
+                        key_words[n] = "";
+                    }
+                    var str = (string)(sh.Cells[2, 4] as Microsoft.Office.Interop.Excel.Range).Value;
+                    key_words = str.Split(',');
+                    for (int n = 0; key_words[n] != ""; n++)
+                    {
+                        MessageBox.Show(key_words[n]);
+                        if (name.Text.Contains(key_words[n]))
+                        {
+                            MessageBox.Show("Нашел - " + key_words[n]);
+                            category.SelectedItem = wsheet.Name;
+                            return;
+                        }
+                    }
+                }
             }
+
+            
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -133,33 +159,33 @@ namespace MISCA_App
             WebControl.GoBack();
         }
 
-        private void price_changed(object sender, TextChangedEventArgs e)
+        private void change_price(object sender, TextChangedEventArgs e)
         {
             if (price.Text != String.Empty && perc.Text != String.Empty && ship.Text != String.Empty)
             {
-                final_price.Text = Math.Round(((Convert.ToDouble(price.Text) * (1.07 + Convert.ToDouble(perc.Text) / 100.0) + 20) * cny + Convert.ToDouble(ship.Text)), 0).ToString();
-                price1.Content = "(" + Math.Round(((Convert.ToDouble(price.Text) * 1.07 + 20) * cny + Convert.ToDouble(ship.Text)), 0).ToString() + ")";
+                try
+                {
+                    final_price.Text = Math.Round(((Convert.ToDouble(price.Text) * (1.07 + Convert.ToDouble(perc.Text) / 100.0) + 20) * cny + Convert.ToDouble(ship.Text)), 0).ToString();
+                    price1.Content = "(" + Math.Round(((Convert.ToDouble(price.Text) * 1.07 + 20) * cny + Convert.ToDouble(ship.Text)), 0).ToString() + ")";
+                }
+                catch (Exception ex)
+                { MessageBox.Show("Произошла ошибка при изменении цены: " + ex.Message); }
             }
-
         }
 
-        private void ship_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            if (price.Text != String.Empty && perc.Text != String.Empty && ship.Text != String.Empty)
-            {
-                final_price.Text = Math.Round(((Convert.ToDouble(price.Text) * (1.07 + Convert.ToDouble(perc.Text) / 100.0) + 20) * cny + Convert.ToDouble(ship.Text)), 0).ToString();
-                price1.Content = "(" + Math.Round(((Convert.ToDouble(price.Text) * 1.07 + 20) * cny + Convert.ToDouble(ship.Text)), 0).ToString() + ")";
-            }
-           
-        }
 
-        private void perc_changed(object sender, TextChangedEventArgs e)
+        private void category_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (price.Text != String.Empty && perc.Text != String.Empty && ship.Text != String.Empty)
+            if (category.SelectionBoxItem.ToString()=="Верхняя" || category.SelectionBoxItem.ToString() == "Лофферы" 
+                || category.SelectionBoxItem.ToString() == "Ботинки" || category.SelectionBoxItem.ToString() == "Босоножки" )
             {
-                final_price.Text = Math.Round(((Convert.ToDouble(price.Text) * (1.07 + Convert.ToDouble(perc.Text) / 100.0) + 20) * cny + Convert.ToDouble(ship.Text)), 0).ToString();
-                price1.Content = "(" + Math.Round(((Convert.ToDouble(price.Text) * 1.07 + 20) * cny + Convert.ToDouble(ship.Text)), 0).ToString() + ")";
+                ship.Text = "700";
             }
+            else if (category.SelectionBoxItem.ToString() == "Топы")
+            {
+                ship.Text = "500";
+            }
+            else ship.Text = "600";
         }
 
         private void WebControl_LoadingFrame(object sender, Awesomium.Core.LoadingFrameEventArgs e)
@@ -179,30 +205,5 @@ namespace MISCA_App
                 e.Handled = true;
             }
         }
-
-        private void perc_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (!((e.Key.GetHashCode() >= 34) && (e.Key.GetHashCode() <= 43)) && !((e.Key.GetHashCode() >= 74) && (e.Key.GetHashCode() <= 83)) && e.Key.GetHashCode() == 73)
-            {
-                e.Handled = true;
-            }
-        }
-
-        private void ship_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (!((e.Key.GetHashCode() >= 34) && (e.Key.GetHashCode() <= 43)) && !((e.Key.GetHashCode() >= 74) && (e.Key.GetHashCode() <= 83)) && e.Key.GetHashCode() == 73)
-            {
-                e.Handled = true;
-            }
-        }
-
-        private void final_price_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (!((e.Key.GetHashCode() >= 34) && (e.Key.GetHashCode() <= 43)) && !((e.Key.GetHashCode() >= 74) && (e.Key.GetHashCode() <= 83)) && e.Key.GetHashCode() == 73)
-            {
-                e.Handled = true;
-            }
-        }
-
     }
 }

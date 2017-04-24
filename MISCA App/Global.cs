@@ -18,8 +18,11 @@ namespace MISCA_App
 
         VkApi vk = new VkApi();
         long[] extraPhotos = new long[4];
+        IList<long> album_id = new List<long>();
 
         List<CheckingWB> images = new List<CheckingWB>();
+        string[] key_words = new string[10];
+
         double cny;
         string imagesHidden = string.Empty;
         bool isload = true, ismain = false, isImgAdded = false;
@@ -36,6 +39,6 @@ namespace MISCA_App
         public delegate void Translation();
         public delegate void Link();
         public delegate void Images();
-        public delegate void Loop();
+        public delegate void Loop();     
     }
 }
