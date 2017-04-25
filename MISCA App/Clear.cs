@@ -15,6 +15,7 @@ namespace MISCA_App
             count = 1;
             rowIdx = 1;
             img_count = 12;
+            cat_id = 1;
 
             nf.Visible = false;
             isImgAdded = false;

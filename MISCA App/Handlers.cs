@@ -75,32 +75,10 @@ namespace MISCA_App
 
                 perc.Text = "20";
 
-                foreach (Microsoft.Office.Interop.Excel.Worksheet sh in wbook.Worksheets)
-                {
-                    if (sh.Name.Contains("nul"))
-                        break;
-
-                    for (int n = 0; n < key_words.Length; n++)
-                    {
-                        key_words[n] = "";
-                    }
-                    var str = (string)(sh.Cells[2, 4] as Microsoft.Office.Interop.Excel.Range).Value;
-                    key_words = str.Split(',');
-                    for (int n = 0; key_words[n] != ""; n++)
-                    {
-                        MessageBox.Show(key_words[n]);
-                        if (name.Text.Contains(key_words[n]))
-                        {
-                            MessageBox.Show("Нашел - " + key_words[n]);
-                            category.SelectedItem = wsheet.Name;
-                            return;
-                        }
-                    }
-                }
+                auto_category();
             }
-
-            
         }
+
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
@@ -174,10 +152,11 @@ namespace MISCA_App
         }
 
 
-        private void category_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void category_DropDownClosed(object sender, System.EventArgs e)
         {
-            if (category.SelectionBoxItem.ToString()=="Верхняя" || category.SelectionBoxItem.ToString() == "Лофферы" 
-                || category.SelectionBoxItem.ToString() == "Ботинки" || category.SelectionBoxItem.ToString() == "Босоножки" )
+            if (category.SelectionBoxItem.ToString() == "Верхняя" || category.SelectionBoxItem.ToString() == "Лофферы"
+            || category.SelectionBoxItem.ToString() == "Ботинки" || category.SelectionBoxItem.ToString() == "Босоножки"
+            || category.SelectionBoxItem.ToString() == "Кеды")
             {
                 ship.Text = "700";
             }
@@ -187,6 +166,7 @@ namespace MISCA_App
             }
             else ship.Text = "600";
         }
+
 
         private void WebControl_LoadingFrame(object sender, Awesomium.Core.LoadingFrameEventArgs e)
         {

@@ -18,7 +18,7 @@ namespace MISCA_App
 
         VkApi vk = new VkApi();
         long[] extraPhotos = new long[4];
-        IList<long> album_id = new List<long>();
+        List<long> album_id = new List<long>();
 
         List<CheckingWB> images = new List<CheckingWB>();
         string[] key_words = new string[10];
@@ -28,6 +28,7 @@ namespace MISCA_App
         bool isload = true, ismain = false, isImgAdded = false;
         int i = 0, rowIdx = 1, count = 1, img_count=12;
         string content = string.Empty;
+        int cat_id = 1;
 
         NotifyIcon nf = new NotifyIcon();
         static Microsoft.Office.Interop.Excel.Application app = new Microsoft.Office.Interop.Excel.Application();

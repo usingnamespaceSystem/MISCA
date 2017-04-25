@@ -23,8 +23,7 @@
             <TextBox x:Name="link" Height="22" TextWrapping="NoWrap" Width="187"/>
             <Button x:Name="fusropars" Content="FUS RO PARSE" Click="fusropars_Click" Height="22" VerticalAlignment="Top" Width="98" Margin="10"/>
             <Label x:Name="label2_Copy" Content="Категория" HorizontalAlignment="Center" VerticalAlignment="Center" Width="67"/>
-            <ComboBox x:Name="category" Width="219" SelectionChanged="category_SelectionChanged">
-            </ComboBox>
+            <ComboBox x:Name="category" Width="219" DropDownClosed="category_DropDownClosed"/>
             <CheckBox x:Name="personal" Content="Личное" Height="18" Width="66"/>
             <Label x:Name="label2" Content="Имя" HorizontalAlignment="Center" VerticalAlignment="Center" Width="67"/>
             <TextBox x:Name="name" Height="22" TextWrapping="Wrap" Width="287"/>

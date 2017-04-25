@@ -194,7 +194,43 @@ namespace MISCA_App
 
                 }
             }
+        }
 
+        public void auto_category()
+        {
+            foreach (Microsoft.Office.Interop.Excel.Worksheet sh in wbook.Worksheets)
+            {
+                if (sh.Name.Contains("nul"))
+                    continue;
+
+                for (int n = 0; n < key_words.Length; n++)
+                {
+                    key_words[n] = "";
+                }
+                var str = (string)(sh.Cells[2, 4] as Microsoft.Office.Interop.Excel.Range).Value;
+                key_words = str.Split(',');
+                for (int n = 0; n < key_words.Length; n++)
+                {
+                    if (name.Text.Contains(key_words[n]))
+                    {
+                        category.SelectedItem = sh.Name;
+                        return;
+                    }
+                }
+            }
+
+
+            if (category.SelectionBoxItem.ToString() == "Верхняя" || category.SelectionBoxItem.ToString() == "Лофферы"
+        || category.SelectionBoxItem.ToString() == "Ботинки" || category.SelectionBoxItem.ToString() == "Босоножки"
+        || category.SelectionBoxItem.ToString() == "Кеды")
+            {
+                ship.Text = "700";
+            }
+            else if (category.SelectionBoxItem.ToString() == "Топы")
+            {
+                ship.Text = "500";
+            }
+            else ship.Text = "600";
 
         }
     }

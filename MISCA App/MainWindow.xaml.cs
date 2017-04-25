@@ -18,5 +18,7 @@ namespace MISCA_App
                     category.Items.Add(sh.Name);
             }
         }
+
+        
     }
 }

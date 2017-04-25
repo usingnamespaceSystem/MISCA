@@ -6,9 +6,7 @@ using System.Text;
 using System.Windows;
 using VkNet.Model.Attachments;
 using VkNet.Model.RequestParams;
-using System.Drawing;
 using Microsoft.Office.Interop.Excel;
-using System.Collections.Generic;
 using System.IO;
 
 namespace MISCA_App
@@ -23,7 +21,7 @@ namespace MISCA_App
 
             var uploadServer = vk.Photo.GetMarketUploadServer(46499802, true, 49, 89, 700);
             var wc = new WebClient();
-            System.Collections.ObjectModel.ReadOnlyCollection<Photo> photo;
+            ReadOnlyCollection<Photo> photo;
             String responseImg;
             long add;
 
@@ -37,13 +35,7 @@ namespace MISCA_App
             catch (Exception e)
             {
                 MessageBox.Show("Произошла ошибка при загрузке главного фото ВК: " + e.Message);
-                Microsoft.Office.Interop.Excel.Range rg = (Microsoft.Office.Interop.Excel.Range)wsheet.Rows[rowIdx, Type.Missing];
-                rg.Delete(Microsoft.Office.Interop.Excel.XlDeleteShiftDirection.xlShiftUp);
-                i = 0;
-                foreach (FileInfo file in dirInfo.GetFiles())
-                {
-                    file.Delete();
-                }
+                unexpected_err();
                 return;
             }
 
@@ -75,12 +67,17 @@ namespace MISCA_App
             if (size.Text != string.Empty)
                 descr += "Размеры: " + size.Text + "\n";
 
+            if (category.SelectionBoxItem.ToString() == "Лофферы" || category.SelectionBoxItem.ToString() == "Ботинки"
+                || category.SelectionBoxItem.ToString() == "Сумки" || category.SelectionBoxItem.ToString() == "Кеды"
+                || category.SelectionBoxItem.ToString() == "Босоножки")
+                cat_id = 4;
+
             try
             {
                 add = vk.Markets.Add(new MarketProductParams
                 {
                     OwnerId = -46499802,
-                    CategoryId = 1,
+                    CategoryId = cat_id,
                     MainPhotoId = photo.FirstOrDefault().Id.Value,
                     Deleted = false,
                     Name = name.Text + " " + (Convert.ToInt32(wsheet.Cells[rowIdx - 1, 1].Value) + 1).ToString(),
@@ -96,14 +93,17 @@ namespace MISCA_App
                 unexpected_err();
                 return;
             }
+
+            try
+            {
                 album_id.Add((Convert.ToInt64((wsheet.Cells[2, 3] as Range).Value)));
                 vk.Markets.AddToAlbum(ownerId: -46499802, itemId: add, albumIds: album_id);
-
-            //catch (Exception e)
-            //{
-            //    MessageBox.Show("Произошла ошибка при добавлении товара в подборку: " + e.Message);
-            //    return;
-            //}
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show("Произошла ошибка при добавлении товара в подборку: " + e.Message);
+                return;
+            }
 
             nf.Visible = true;
             nf.Icon = new System.Drawing.Icon(AppDomain.CurrentDomain.BaseDirectory + "bowl.ico");
@@ -119,8 +119,8 @@ namespace MISCA_App
 
         private void unexpected_err()
         {
-            Microsoft.Office.Interop.Excel.Range rg = (Microsoft.Office.Interop.Excel.Range)wsheet.Rows[rowIdx, Type.Missing];
-            rg.Delete(Microsoft.Office.Interop.Excel.XlDeleteShiftDirection.xlShiftUp);
+            Range rg = (Range)wsheet.Rows[rowIdx, Type.Missing];
+            rg.Delete(XlDeleteShiftDirection.xlShiftUp);
             i = 0;
             foreach (FileInfo file in dirInfo.GetFiles())
             {
