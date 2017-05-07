@@ -65,7 +65,12 @@ namespace MISCA_App
             if (material.Text != string.Empty)
                 descr += "Материал: " + material.Text + "\n";
             if (size.Text != string.Empty)
-                descr += "Размеры: " + size.Text + "\n";
+            {
+                if (size.Text.Length > 50)
+                    descr += "Размеры: " + "\n" + size.Text + "\n";
+                else
+                    descr += "Размеры: " + size.Text + "\n";
+            }
 
             if (category.SelectionBoxItem.ToString() == "Лофферы" || category.SelectionBoxItem.ToString() == "Ботинки"
                 || category.SelectionBoxItem.ToString() == "Сумки" || category.SelectionBoxItem.ToString() == "Кеды"

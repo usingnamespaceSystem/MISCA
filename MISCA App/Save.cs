@@ -63,9 +63,7 @@ namespace MISCA_App
                 wsheet.Cells[rowIdx, 4].Value = name.Text;
                 wsheet.Cells[rowIdx, 5].Value = prod.Text;
                 wsheet.Cells[rowIdx, 6].Value = material.Text;
-                if (size.Text.Length > 50)
-                    { wsheet.Cells[rowIdx, 7].Value = "/n" + size.Text; }
-                else wsheet.Cells[rowIdx, 7].Value = size.Text;
+                wsheet.Cells[rowIdx, 7].Value = size.Text;
                 wsheet.Cells[rowIdx, 8].Value = price.Text;
                 wsheet.Cells[rowIdx, 9].Value = perc.Text;
                 wsheet.Cells[rowIdx, 10].Value = ship.Text;
