@@ -80,6 +80,7 @@
         </WrapPanel>
         <Label x:Name="status" Content="" Margin="0,0,10,4" Height="32" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="131"/>
         <Label x:Name="img_checking_count" Content="0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="30" Margin="342,0,0,0" Panel.ZIndex="100" Height="62"/>
+        <awe:WebControl x:Name="WebControl_promo" Margin="356,169,754,648" LoadingFrame="WebControl_LoadingFrame" LoadingFrameComplete="WebControl_LoadingFrameComplete" ScrollViewer.HorizontalScrollBarVisibility="Visible"/>
 
     </Grid>
 </Window>

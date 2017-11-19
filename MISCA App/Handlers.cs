@@ -1,9 +1,11 @@
-﻿using System;
+﻿using Awesomium.Windows.Controls;
+using System;
+using System.Diagnostics;
+using System.IO;
+using System.Net;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Diagnostics;
-using System.IO;
 
 namespace MISCA_App
 {
@@ -20,7 +22,7 @@ namespace MISCA_App
             }
             catch
             {
-                cny =8.7;
+                cny = 8.7;
             };
 
             clear();
@@ -29,8 +31,9 @@ namespace MISCA_App
             {
                 file.Delete();
             }
-
+            WebControl_promo.Visibility = Visibility.Visible;
             TranslateText();
+            
         }
 
         private void link_KeyDown(object sender, KeyEventArgs e)
@@ -46,7 +49,6 @@ namespace MISCA_App
             }
         }
 
-
         private void reload_Click(object sender, RoutedEventArgs e)
         {
             WebControl.Reload(true);
@@ -55,21 +57,36 @@ namespace MISCA_App
         private void WebControl_LoadingFrameComplete(object sender, Awesomium.Core.FrameEventArgs e)
         {
             status.Content = "Загрузка завершена";
+            string promotion = string.Empty;
 
             if (isload)
             {
+                WebControl_promo.Source = new Uri(link.Text);
+                WebControl_promo.LoadingFrameComplete += (obj, evt) =>
+                {
+                    string script = @"(function() { for (var i in g_config.promotion.promoData) { return g_config.promotion.promoData[i][0].price } }())";
+                    promotion = WebControl_promo.ExecuteJavascriptWithResult(script);
+
+                    if (promotion != "undefined")
+                        price.Text = promotion.Trim('"').Replace('.', ',');
+
+
+                    if (promotion == "undefined")
+                        Findprice();
+
+                    WebControl_promo.Visibility = Visibility.Hidden;
+                };
+                
                 content = WebControl.ExecuteJavascriptWithResult("document.getElementsByTagName('html')[0].innerHTML");
 
                 Findname();
-
-                Findprice();
 
                 Findseller();
 
                 Findmaterial();
 
                 Get_images();
-               
+
                 isload = false;
 
                 perc.Text = "7";
@@ -124,7 +141,7 @@ namespace MISCA_App
                 final_price.Text = Math.Round(((Convert.ToDouble(price.Text) * (1.07 + Convert.ToDouble(perc.Text) / 100.0) + 20) * cny + Convert.ToDouble(ship.Text)), 0).ToString();
                 price1.Content = "(" + Math.Round(((Convert.ToDouble(price.Text) * 1.07 + 20) * cny + Convert.ToDouble(ship.Text)), 0).ToString() + ")";
             }
-           
+
         }
 
         private void perc_changed(object sender, TextChangedEventArgs e)

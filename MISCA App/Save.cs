@@ -2,9 +2,6 @@
 using System.Drawing;
 using System.Net;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Media;
 
 namespace MISCA_App
 {
