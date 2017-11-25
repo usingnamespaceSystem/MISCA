@@ -25,7 +25,7 @@ namespace MISCA_App
             };
 
             clear();
-
+            WebControl_promo.Visibility = Visibility.Visible;
             TranslateText();
         }
 
@@ -56,14 +56,28 @@ namespace MISCA_App
         private void WebControl_LoadingFrameComplete(object sender, Awesomium.Core.FrameEventArgs e)
         {
             status.Content = "Загрузка завершена";
+            string promotion = string.Empty;
 
             if (isload)
             {
+                WebControl_promo.Source = new Uri(link.Text);
+                WebControl_promo.LoadingFrameComplete += (obj, evt) =>
+                {
+                    string script = @"(function() { for (var i in g_config.promotion.promoData) { return g_config.promotion.promoData[i][0].price } }())";
+                    promotion = WebControl_promo.ExecuteJavascriptWithResult(script);
+                   
+                    if (promotion != "undefined")
+                        price.Text = promotion.Trim('"').Replace('.', ',');
+                    
+                    if (promotion == "undefined")
+                        Findprice();
+                    
+                    WebControl_promo.Visibility = Visibility.Hidden;
+                 };
+
                 content = WebControl.ExecuteJavascriptWithResult("document.getElementsByTagName('html')[0].innerHTML");
 
                 Findname();
-
-                Findprice();
 
                 Findseller();
 

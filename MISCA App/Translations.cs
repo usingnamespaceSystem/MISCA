@@ -44,6 +44,7 @@ namespace MISCA_App
             string url = String.Format("https://z5h64q92x9.net/tr-start?ui=ru&url={0}&lang=zh-ru", url_ready);
 
             WebControl.Source = new Uri(url);
+
         }
         /// <summary>
         /// Перевод характеристик товара

@@ -68,6 +68,7 @@
         <Label x:Name="img_checking_count" Content="0" HorizontalAlignment="Left" Width="30" Margin="362,0,0,14" Panel.ZIndex="100" Height="26" VerticalAlignment="Bottom"/>
         <Button x:Name="img_added" Content="Доп. фото добавлено" Margin="397,0,0,14" HorizontalAlignment="Left" Width="133" Click="img_added_Click" Height="22" VerticalAlignment="Bottom" Panel.ZIndex="100"/>
         <Button x:Name="img_deleted" Content="-" Margin="535,0,0,14" HorizontalAlignment="Left" Width="30" Click="img_deleted_Click" Height="22" VerticalAlignment="Bottom" Panel.ZIndex="100"/>
+        <awe:WebControl x:Name="WebControl_promo" Margin="1067,782,43,52"/>
 
     </Grid>
 </Window>
