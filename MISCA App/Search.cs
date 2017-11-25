@@ -16,10 +16,13 @@ namespace MISCA_App
             Regex name_tao = new Regex("<span " + "class=\"t-title\" itemprop=\"name\"" + @">(.+)" + "</span>");
             Regex name_world_tmall = new Regex("<h1 data-spm=\"1000983\">\n" + "(.+)" + "\n</h1>");
             Regex script = new Regex("<title>" + @"(.+)" + "-tmall.com");
+            Regex name_tao_h3 = new Regex("<h3 class=\"tb-main-title\" data-title=\"(.+)\">");
+
 
             MatchCollection matches_name_tao = name_tao.Matches(content);
             MatchCollection matches_name_world_tmall = name_world_tmall.Matches(content);
             MatchCollection matches_script = script.Matches(content);
+            MatchCollection matches_name_tao_h3 = name_tao_h3.Matches(content);
 
             if (matches_name_tao.Count > 0)
             {
@@ -32,6 +35,10 @@ namespace MISCA_App
             else if (matches_script.Count > 0)
             {
                 name.Text = features_translation(matches_script[0].Groups[1].ToString());
+            }
+            else if (matches_name_tao_h3.Count > 0)
+            {
+                name.Text = features_translation(matches_name_tao_h3[0].Groups[1].ToString());
             }
         }
 
@@ -57,6 +64,8 @@ namespace MISCA_App
 
             if (price.Text.Contains('.'))
                 price.Text = price.Text.Replace('.', ',');
+            if (price.Text.Contains('"'))
+                price.Text = price.Text.Trim('"');
         }
 
         private void Findseller()
@@ -117,14 +126,19 @@ namespace MISCA_App
         {
             Regex descURLtao = new Regex("descUrl: \"" + @"(.{140,150})" + "\"");
             Regex descURLtmall = new Regex("{\"descUrl\":\"" + @"(.{155,165})" + "\",");
+            Regex descURLtao_withTrash = new Regex(@"descUrl.+" + "//" + @"(.+)" + "' : '");
+
             MatchCollection matchURLtao = descURLtao.Matches(content);
             MatchCollection matchURLtmall = descURLtmall.Matches(content);
+            MatchCollection matchURLtao_withTrash = descURLtao_withTrash.Matches(content);
             WebClient wb = new WebClient();
 
             if (matchURLtao.Count > 0)
                 imagesHidden = wb.DownloadString(new Uri("http:" + matchURLtao[0].Groups[1].ToString()));
             if (matchURLtmall.Count > 0)
                 imagesHidden = wb.DownloadString(new Uri("http:" + matchURLtmall[0].Groups[1].ToString()));
+            if (matchURLtao_withTrash.Count > 0)
+                imagesHidden = wb.DownloadString(new Uri("http://" + matchURLtao_withTrash[0].Groups[1].ToString()));
 
             Regex img_tmall = new Regex("data-ks-lazyload=\"https:" + "//img.alicdn.com/" + @"(.{50,80})" + ".jpg\">");
             Regex img_tmall2 = new Regex("//img.alicdn.com/" + @"(.{50,80})" + ".jpg\"");
@@ -141,7 +155,7 @@ namespace MISCA_App
                     CheckingWB img_parser = new CheckingWB();
                     images.Add(img_parser);
                     img_parser.Name = "img" + (n + 1).ToString();
-
+                    
                     img_parser.WB.Source = new Uri("https://img.alicdn.com/" + matches_img_tmall[n].Groups[1].ToString() + ".jpg");
 
                     img_parser.checkBox.Checked += (s, e) =>
@@ -181,7 +195,7 @@ namespace MISCA_App
                     images.Add(img_parser);
                     img_parser.Name = "img" + (n + 1).ToString();
 
-                    img_parser.WB.Source = new Uri("https://img.alicdn.com/" + matches_img_tao[n].Groups[1].ToString() + ".gif");
+                    img_parser.WB.Source = new Uri("https://img.alicdn.com/" + matches_img_tao[n].Groups[1].ToString() + ".jpg");
 
                     img_parser.checkBox.Checked += (s, e) =>
                     { img_checking_count.Content = Convert.ToInt32(img_checking_count.Content) + 1; };
@@ -194,8 +208,6 @@ namespace MISCA_App
 
                 }
             }
-
-
         }
     }
 }
