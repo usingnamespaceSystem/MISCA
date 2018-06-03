@@ -284,5 +284,84 @@ namespace MISCA_App
             }
         }
 
+        private void check_available_click(object sender, RoutedEventArgs e)
+        {
+            string reply = string.Empty;
+            //int link_column = 3;
+            stock_grid.ItemsSource = StockRowCollection;
+
+            for (int i = 1; i <= last_column; i++)
+            {
+                string header = wbook.Worksheets[1].Cells[1, i].Text;
+                stock_grid.Columns[i - 1].Header = header;
+                stock_grid.Columns[i - 1].MaxWidth = 200;
+                if (header == "Ссылка")
+                {
+                    link_column = i;
+                }
+            }
+
+            foreach (CheckBox ch in category_panel.Children)
+            {
+                Microsoft.Office.Interop.Excel.Worksheet wsheet = wbook.Worksheets[ch.Content];
+                if (ch.IsChecked == true)
+                {
+                    foreach (Microsoft.Office.Interop.Excel.Range row in wsheet.UsedRange.Rows)
+                    {
+                        if (row.Row == 1 )
+                            continue;
+
+                        using (WebClient client = new WebClient())
+                        {
+                            try
+                            {
+                                client.Encoding = System.Text.Encoding.GetEncoding("GB2312");
+                                reply = client.DownloadString(row.Columns[link_column].Text);
+                            }
+                            catch (WebException ex)
+                            {
+                                if (ex.Status == WebExceptionStatus.ProtocolError && ex.Response != null)
+                                {
+                                    StockRowCollection.Add(new StockRow()
+                                    {
+                                        stock_article = row.Columns[1].Text,
+                                        stock_status = row.Columns[2].Text,
+                                        stock_name = row.Columns[3].Text,
+                                        stock_link = row.Columns[4].Text,
+                                        stock_seller = row.Columns[5].Text,
+                                        stock_material = row.Columns[6].Text,
+                                        stock_size = row.Columns[7].Text,
+                                        stock_price = row.Columns[8].Text,
+                                        stock_percent = row.Columns[9].Text,
+                                        stock_shipping = row.Columns[10].Text,
+                                        stock_summary = row.Columns[11].Text
+                                    });
+                                    continue;
+                                }
+                            }
+                        }
+
+                        if (reply.Contains("此宝贝已下架") || reply.Contains("此商品已下架") || reply.Contains("您查看的宝贝不存在"))
+                        {
+                            StockRowCollection.Add(new StockRow()
+                            {
+                                stock_article = row.Columns[1].Text,
+                                stock_status = row.Columns[2].Text,
+                                stock_name = row.Columns[3].Text,
+                                stock_link = row.Columns[4].Text,
+                                stock_seller = row.Columns[5].Text,
+                                stock_material = row.Columns[6].Text,
+                                stock_size = row.Columns[7].Text,
+                                stock_price = row.Columns[8].Text,
+                                stock_percent = row.Columns[9].Text,
+                                stock_shipping = row.Columns[10].Text,
+                                stock_summary = row.Columns[11].Text
+                            });
+                            reply = string.Empty;
+                        }
+                    }
+                }
+            }
+        }
     }
 }
