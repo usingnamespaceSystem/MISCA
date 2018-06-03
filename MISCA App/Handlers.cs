@@ -188,6 +188,30 @@ namespace MISCA_App
             }
         }
 
+        private void change_weight(object sender, TextChangedEventArgs e)
+        {
+            if (weight.Text != String.Empty)
+            {
+                try
+                {
+                    int agents_comission = 0;
+                    //комиссия поставщика считается либо за вес, либо единожды за посылку вцелом
+                    if (agent_row.Columns[3].Value)
+                    {
+                        agents_comission = weight.Text * agent_row.Columns[3].Value;
+                    }
+                    else
+                    {
+                        agents_comission = weight.Text * agent_row.Columns[4].Value;
+                    }
+                    //комиссия поставщика считается либо за вес, либо единожды за посылку вцелом
+                    ship.Content = weight.Text * agent_row.Columns[5].Value + agents_comission;
+                }
+                catch (Exception ex)
+                { MessageBox.Show("Произошла ошибка при изменении веса: " + ex.Message); }
+            }
+        }
+
 
         private void category_DropDownClosed(object sender, System.EventArgs e)
         {
