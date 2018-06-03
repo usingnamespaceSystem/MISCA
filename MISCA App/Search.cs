@@ -18,10 +18,10 @@ namespace MISCA_App
             Regex script = new Regex("<title>" + @"(.+)" + "-tmall.com");
             Regex name_tao_h3 = new Regex("<h3 class=\"tb-main-title\" data-title=\"(.+)\">");
 
-            MatchCollection matches_name_tao = name_tao.Matches(content);
-            MatchCollection matches_name_world_tmall = name_world_tmall.Matches(content);
-            MatchCollection matches_script = script.Matches(content);
-            MatchCollection matches_name_tao_h3 = name_tao_h3.Matches(content);
+            MatchCollection matches_name_tao = name_tao.Matches(_content);
+            MatchCollection matches_name_world_tmall = name_world_tmall.Matches(_content);
+            MatchCollection matches_script = script.Matches(_content);
+            MatchCollection matches_name_tao_h3 = name_tao_h3.Matches(_content);
 
             if (matches_name_tao.Count > 0)
             {
@@ -51,9 +51,9 @@ namespace MISCA_App
             Regex price_tao1 = new Regex("<em class=\"tb-rmb-num\">" + @"(.+)" + "</em>");
             Regex price_tao2 = new Regex("<em class=\"tb-rmb\">¥</em>" + @"(.+)" + "</strong>");
 
-            MatchCollection matches_price_world_mall = price_world_mall.Matches(content);
-            MatchCollection matches_price_tao1 = price_tao1.Matches(content);
-            MatchCollection matches_price_tao2 = price_tao2.Matches(content);
+            MatchCollection matches_price_world_mall = price_world_mall.Matches(_content);
+            MatchCollection matches_price_tao1 = price_tao1.Matches(_content);
+            MatchCollection matches_price_tao2 = price_tao2.Matches(_content);
 
             if (matches_price_world_mall.Count > 0)
             {
@@ -79,8 +79,8 @@ namespace MISCA_App
             Regex seller_detail_tmall = new Regex("<li id=\"J_attrBrandName\" title=\"" + @"(.+)" + "\">" + @".+" + "</li>");
             Regex seller_tao = new Regex("<div class=\"tb-shop-name\">" + @"\n<h3><a href=" + @".+" + "title=\"" + @"(.+)" + "\">");
 
-            MatchCollection matches_seller_detall_tmall = seller_detail_tmall.Matches(content);
-            MatchCollection matches_seller_tao = seller_tao.Matches(content);
+            MatchCollection matches_seller_detall_tmall = seller_detail_tmall.Matches(_content);
+            MatchCollection matches_seller_tao = seller_tao.Matches(_content);
 
             if (matches_seller_detall_tmall.Count > 0)
             {
@@ -104,9 +104,9 @@ namespace MISCA_App
             Regex material2_tmall = new Regex("<li title=\" " + @"(.+)" + "\">Материальный компонент: " + @".+" + "</li>");
             Regex material3_tao = new Regex("<li title=\"" + @" (.+)" + "\">\nТкань : " + @".+" + "\n</li>");
 
-            MatchCollection matches_material1_tmall = material1_tmall.Matches(content);
-            MatchCollection matches_material2_tmall = material2_tmall.Matches(content);
-            MatchCollection matches_material3_tao = material3_tao.Matches(content);
+            MatchCollection matches_material1_tmall = material1_tmall.Matches(_content);
+            MatchCollection matches_material2_tmall = material2_tmall.Matches(_content);
+            MatchCollection matches_material3_tao = material3_tao.Matches(_content);
 
             if (matches_material1_tmall.Count > 0)
             {
@@ -134,32 +134,32 @@ namespace MISCA_App
             Regex descURLtmall = new Regex("{\"descUrl\":\"" + @"(.{155,165})" + "\",");
             Regex descURLtao_withTrash = new Regex(@"descUrl.+" + "//" + @"(.+)" + "' : '");
 
-            MatchCollection matchURLtao = descURLtao.Matches(content);
-            MatchCollection matchURLtmall = descURLtmall.Matches(content);
-            MatchCollection matchURLtao_withTrash = descURLtao_withTrash.Matches(content);
+            MatchCollection matchURLtao = descURLtao.Matches(_content);
+            MatchCollection matchURLtmall = descURLtmall.Matches(_content);
+            MatchCollection matchURLtao_withTrash = descURLtao_withTrash.Matches(_content);
             WebClient wb = new WebClient();
 
             if (matchURLtao.Count > 0)
-                imagesHidden = wb.DownloadString(new Uri("http:" + matchURLtao[0].Groups[1].ToString()));
+                _imagesHidden = wb.DownloadString(new Uri("http:" + matchURLtao[0].Groups[1].ToString()));
             if (matchURLtmall.Count > 0)
-                imagesHidden = wb.DownloadString(new Uri("http:" + matchURLtmall[0].Groups[1].ToString()));
+                _imagesHidden = wb.DownloadString(new Uri("http:" + matchURLtmall[0].Groups[1].ToString()));
             if (matchURLtao_withTrash.Count > 0)
-                imagesHidden = wb.DownloadString(new Uri("http://" + matchURLtao_withTrash[0].Groups[1].ToString()));
+                _imagesHidden = wb.DownloadString(new Uri("http://" + matchURLtao_withTrash[0].Groups[1].ToString()));
 
             Regex img_tmall = new Regex("data-ks-lazyload=\"https:" + "//img.alicdn.com/" + @"(.{50,80})" + ".jpg\">");
             Regex img_tmall2 = new Regex("//img.alicdn.com/" + @"(.{50,80})" + ".jpg\"");
             Regex img_tao = new Regex("//img.alicdn.com/" + @"(.{50,80})" + ".gif\"");
 
-            MatchCollection matches_img_tmall = img_tmall.Matches(imagesHidden);
-            MatchCollection matches_img_tao = img_tao.Matches(imagesHidden);
-            MatchCollection matches_img_tmall2 = img_tmall2.Matches(imagesHidden);
+            MatchCollection matches_img_tmall = img_tmall.Matches(_imagesHidden);
+            MatchCollection matches_img_tao = img_tao.Matches(_imagesHidden);
+            MatchCollection matches_img_tmall2 = img_tmall2.Matches(_imagesHidden);
 
             if (matches_img_tmall.Count > 0)
             {
                 for (int n = 0; n != matches_img_tmall.Count; n++)
                 {
                     CheckingWB img_parser = new CheckingWB();
-                    images.Add(img_parser);
+                    _images.Add(img_parser);
                     img_parser.Name = "img" + (n + 1).ToString();
 
                     img_parser.WB.Source = new Uri("https://img.alicdn.com/" + matches_img_tmall[n].Groups[1].ToString() + ".jpg");
@@ -178,7 +178,7 @@ namespace MISCA_App
                 for (int n = 0; n != matches_img_tmall2.Count; n++)
                 {
                     CheckingWB img_parser = new CheckingWB();
-                    images.Add(img_parser);
+                    _images.Add(img_parser);
                     img_parser.Name = "img" + (n + 1).ToString();
 
                     img_parser.WB.Source = new Uri("https://img.alicdn.com/" + matches_img_tmall2[n].Groups[1].ToString() + ".jpg");
@@ -198,7 +198,7 @@ namespace MISCA_App
                 for (int n = 0; n != matches_img_tao.Count; n++)
                 {
                     CheckingWB img_parser = new CheckingWB();
-                    images.Add(img_parser);
+                    _images.Add(img_parser);
                     img_parser.Name = "img" + (n + 1).ToString();
 
                     img_parser.WB.Source = new Uri("https://img.alicdn.com/" + matches_img_tao[n].Groups[1].ToString() + ".gif");
@@ -218,35 +218,35 @@ namespace MISCA_App
 
         public void auto_category()
         {
-            foreach (Microsoft.Office.Interop.Excel.Worksheet sh in wbook.Worksheets)
+            foreach (Microsoft.Office.Interop.Excel.Worksheet sh in _wbook.Worksheets)
             {
                 if (sh.Name.Contains("nul"))
                     continue;
 
-                for (int n = 0; n < key_words.Length; n++)
+                for (int n = 0; n < _keyWords.Length; n++)
                 {
-                    key_words[n] = "";
+                    _keyWords[n] = "";
                 }
                 var str = (string)(sh.Cells[2, 4] as Microsoft.Office.Interop.Excel.Range).Value;
-                key_words = str.Split(',');
-                for (int n = 0; n < key_words.Length; n++)
+                _keyWords = str.Split(',');
+                for (int n = 0; n < _keyWords.Length; n++)
                 {
-                    if (name.Text.Contains(key_words[n]))
+                    if (name.Text.Contains(_keyWords[n]))
                     {
                         category.SelectedItem = sh.Name;
                         weight.Text = Convert.ToInt32((sh.Cells[2, 5] as Microsoft.Office.Interop.Excel.Range).Value);
                         int agents_comission=0;
                         //комиссия посредника считается либо за вес, либо единожды за посылку вцелом
-                        if (agent_row.Columns[3].Value)
+                        if (_agentRow.Columns[3].Value)
                         {
-                            agents_comission = weight.Text * agent_row.Columns[3].Value;
+                            agents_comission = weight.Text * _agentRow.Columns[3].Value;
                         }
                         else
                         {
-                            agents_comission = weight.Text * agent_row.Columns[4].Value;
+                            agents_comission = weight.Text * _agentRow.Columns[4].Value;
                         }
                         //комиссия посредника считается либо за вес, либо единожды за посылку вцелом
-                        ship.Content = weight.Text * agent_row.Columns[5].Value + agents_comission;
+                        ship.Content = weight.Text * _agentRow.Columns[5].Value + agents_comission;
                         return;
                     }
                 }

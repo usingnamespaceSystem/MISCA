@@ -50,21 +50,46 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>F:\Awesomium\1.7.5.1\wrappers\Awesomium.NET\Assemblies\Awesomium.Windows.Forms.dll</HintPath>
     </Reference>
+    <Reference Include="crypto, Version=1.8.1.0, Culture=neutral, PublicKeyToken=0e99375e54769942">
+      <HintPath>..\packages\Portable.BouncyCastle.1.8.1.1\lib\netstandard1.3\crypto.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="HtmlAgilityPack, Version=1.4.9.5, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
       <HintPath>..\packages\HtmlAgilityPack.1.4.9.5\lib\Net45\HtmlAgilityPack.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="InstaSharp, Version=2.0.0.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\packages\InstaSharp.2.0.6\lib\netstandard1.2\InstaSharp.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Office.Interop.Excel.15.0.4795.1000\lib\net20\Microsoft.Office.Interop.Excel.dll</HintPath>
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
+    <Reference Include="mscorlib"/>
     <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition"/>
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.IO.FileSystem, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <HintPath>..\packages\System.IO.FileSystem.4.0.1\lib\net46\System.IO.FileSystem.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.IO.FileSystem.Primitives, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <HintPath>..\packages\System.IO.FileSystem.Primitives.4.0.1\lib\net46\System.IO.FileSystem.Primitives.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Net.Http.Formatting, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.4.0.20710.0\lib\net40\System.Net.Http.Formatting.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Net.Http.WebRequest"/>
+    <Reference Include="System.Web"/>
+    <Reference Include="System.Web.Extensions"/>
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
@@ -77,6 +102,10 @@
     </Reference>
     <Reference Include="VkNet, Version=1.21.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\VkNet.1.25.0\lib\net40\VkNet.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="WebApiContrib.Formatting.JavaScriptSerializer, Version=0.9.4.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\packages\WebApiContrib.Formatting.JavaScriptSerializer.0.9.4.0\lib\net40\WebApiContrib.Formatting.JavaScriptSerializer.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="WindowsBase" />
@@ -93,6 +122,15 @@
     <Compile Include="Currency.cs" />
     <Compile Include="Global.cs" />
     <Compile Include="Handlers.cs" />
+    <Compile Include="InstagramAPI\InstagramApi.cs"/>
+    <Compile Include="InstagramAPI\InstagramUploader.cs"/>
+    <Compile Include="InstagramAPI\Models\ErrorResponse.cs"/>
+    <Compile Include="InstagramAPI\Models\LoggedInUserResponse.cs"/>
+    <Compile Include="InstagramAPI\Models\NormalResponse.cs"/>
+    <Compile Include="InstagramAPI\Models\UploadResponse.cs"/>
+    <Compile Include="InstagramAPI\Utilities\ImageUtilities.cs"/>
+    <Compile Include="InstagramAPI\Utilities\StringUtilities.cs"/>
+    <Compile Include="InstargamUpload.cs"/>
     <Compile Include="Search.cs" />
     <Compile Include="Translations.cs" />
     <Compile Include="VK.cs" />

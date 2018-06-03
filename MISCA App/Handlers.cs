@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Windows.Data;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Net;
 using System.Text;
 using System.Reflection;
@@ -25,9 +26,11 @@ namespace MISCA_App
             }
             catch
             {
-                cny = 8.7;
+                _cny = 8.7;
                 MessageBox.Show("Курс не получен");
-            };
+            }
+
+            ;
 
             clear();
             WebControl_promo.Visibility = Visibility.Visible;
@@ -60,68 +63,69 @@ namespace MISCA_App
         private void WebControl_LoadingFrameComplete(object sender, Awesomium.Core.FrameEventArgs e)
         {
             status.Content = "Загрузка завершена";
-            string promotion = string.Empty;
 
-            if (isload)
+            if (!_isload) return;
+            WebControl_promo.Source = new Uri(link.Text);
+            const string script =
+                @"(function() { for (var i in g_config.promotion.promoData) { return g_config.promotion.promoData[i][0].price } }())";
+            WebControl_promo.LoadingFrameComplete += (obj, evt) =>
             {
-                WebControl_promo.Source = new Uri(link.Text);
-                WebControl_promo.LoadingFrameComplete += (obj, evt) =>
+                string promotion = WebControl_promo.ExecuteJavascriptWithResult(script);
+
+                if (promotion != "undefined")
+                    price.Text = promotion.Trim('"').Replace('.', ',');
+
+                if (promotion == "undefined")
+                    Findprice();
+
+                if (price.Text.Contains("-"))
+                    price.Text = price.Text.Split('-')[1].Trim();
+
+                if (price.Text != "")
+                    perc.Text = Convert.ToString(Math.Round(2500 / Convert.ToDecimal(price.Text.Replace('.', ',')), 0),
+                        CultureInfo.CurrentCulture);
+
+                if (perc.Text == "0" || perc.Text == "")
                 {
-                    string script = @"(function() { for (var i in g_config.promotion.promoData) { return g_config.promotion.promoData[i][0].price } }())";
-                    promotion = WebControl_promo.ExecuteJavascriptWithResult(script);
+                    perc.Text = "20";
+                }
 
-                    if (promotion != "undefined")
-                        price.Text = promotion.Trim('"').Replace('.', ',');
+                WebControl_promo.Visibility = Visibility.Hidden;
+            };
 
-                    if (promotion == "undefined")
-                        Findprice();
+            _content = WebControl.ExecuteJavascriptWithResult("document.getElementsByTagName('html')[0].innerHTML");
 
-                    if (price.Text.Contains("-"))
-                        price.Text = price.Text.Split('-')[1].Trim();
+            Findname();
 
-                    if (price.Text != "")
-                        perc.Text = Convert.ToString(Math.Round(2500 / Convert.ToDecimal(price.Text.Replace('.', ',')), 0));
+            Findseller();
 
-                    if (perc.Text == "0" || perc.Text == "")
-                    {
-                        perc.Text = "20";
-                    }
+            Findmaterial();
 
-                    WebControl_promo.Visibility = Visibility.Hidden;
-                };
+            Get_images();
 
-                content = WebControl.ExecuteJavascriptWithResult("document.getElementsByTagName('html')[0].innerHTML");
+            _isload = false;
 
-                Findname();
-
-                Findseller();
-
-                Findmaterial();
-
-                Get_images();
-
-                isload = false;
-
-                auto_category();
-            }
+            auto_category();
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            foreach (FileInfo file in dirInfo.GetFiles())
+            foreach (var file in _dirInfo.GetFiles())
             {
                 file.Delete();
             }
 
             try
             {
-                wbook.Close(true);
+                _wbook.Close(true);
             }
             catch (Exception)
-            { MessageBox.Show("Не удалось закрыть Excel"); }
+            {
+                MessageBox.Show("Не удалось закрыть Excel");
+            }
 
 
-            app.Quit();
+            App.Quit();
 
             try
             {
@@ -130,26 +134,25 @@ namespace MISCA_App
                     process.Kill();
                 }
             }
-            catch { }
+            catch
+            {
+                // ignored
+            }
         }
 
         private void img_added_Click(object sender, RoutedEventArgs e)
         {
-            if (i > 0 && i < 5)
-            {
-                isImgAdded = true;
-                img_checking_count.Content = Convert.ToInt32(img_checking_count.Content) + 1;
-            }
+            if (_i <= 0 || _i >= 5) return;
+            _isImgAdded = true;
+            img_checking_count.Content = Convert.ToInt32(img_checking_count.Content) + 1;
         }
 
 
         private void img_deleted_Click(object sender, RoutedEventArgs e)
         {
-            if (i > 0 && i < 5)
-            {
-                isImgAdded = false;
-                img_checking_count.Content = Convert.ToInt32(img_checking_count.Content) - 1;
-            }
+            if (_i <= 0 || _i >= 5) return;
+            _isImgAdded = false;
+            img_checking_count.Content = Convert.ToInt32(img_checking_count.Content) - 1;
         }
 
         private void forward_Click(object sender, RoutedEventArgs e)
@@ -160,17 +163,24 @@ namespace MISCA_App
         private void parse_size_Click(object sender, RoutedEventArgs e)
         {
             size_table.ItemsSource = SizeRowCollection;
-            List<string> parameters = new List<string>();
+            var parameters = new List<string>();
             parameters.AddRange(size.Text.Split(','));
             for (int i = 1; i <= parameters.Count; i++)
             {
                 size_table.Columns[i - 1].Header = parameters[i - 1];
             }
-            //size_table.Items.Add(new ListCollectionView(parameters));
-            SizeRow new_row = new SizeRow() { field1 = string.Empty, field2 = string.Empty, field3 = string.Empty, field4 = string.Empty, field5 = string.Empty };
-            SizeRowCollection.Add(new_row);
 
-            isSizeInTable = true;
+            //size_table.Items.Add(new ListCollectionView(parameters));
+            var newRow = new SizeRow()
+            {
+                field1 = string.Empty,
+                field2 = string.Empty,
+                field3 = string.Empty,
+                field4 = string.Empty,
+                field5 = string.Empty
+            };
+            SizeRowCollection.Add(newRow);
+            _isSizeInTable = true;
         }
 
 
@@ -181,75 +191,86 @@ namespace MISCA_App
 
         private void change_price(object sender, TextChangedEventArgs e)
         {
-            if (price.Text != String.Empty && perc.Text != String.Empty)
+            if (price.Text == string.Empty || perc.Text == string.Empty) return;
+            try
             {
-                try
-                {
-                    final_price.Text = Math.Round(((Convert.ToDouble(price.Text) * (1.07 + Convert.ToDouble(perc.Text) / 100.0) + 20) * cny + Convert.ToDouble(ship.Content)), 0).ToString();
-                    income.Content = (Convert.ToDouble(final_price.Text) - Math.Round(((Convert.ToDouble(price.Text) * 1.07 + 20) * cny + Convert.ToDouble(ship.Content)), 0)).ToString();
-                }
-                catch (Exception ex)
-                { MessageBox.Show("Произошла ошибка при изменении цены: " + ex.Message); }
+                final_price.Text = Math.Round(
+                    (
+                        (Convert.ToDouble(price.Text) * (1.07 + Convert.ToDouble(perc.Text) / 100.0) + 20) * _cny +
+                        Convert.ToDouble(ship.Content)),
+                    0).ToString();
+                income.Content =
+                    (Convert.ToDouble(final_price.Text) - Math.Round(
+                         ((Convert.ToDouble(price.Text) * 1.07 + 20) * _cny + Convert.ToDouble(ship.Content)), 0))
+                    .ToString();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Произошла ошибка при изменении цены: " + ex.Message);
             }
         }
 
         private void change_weight(object sender, TextChangedEventArgs e)
         {
-            if (weight.Text != String.Empty)
+            if (weight.Text == String.Empty) return;
+            var agentsComission = 0;
+            try
             {
-                try
+                //комиссия поставщика считается либо за вес, либо единожды за посылку вцелом
+                if (_agentRow.Columns[3].Value)
                 {
-                    int agents_comission = 0;
-                    //комиссия поставщика считается либо за вес, либо единожды за посылку вцелом
-                    if (agent_row.Columns[3].Value)
-                    {
-                        agents_comission = weight.Text * agent_row.Columns[3].Value;
-                    }
-                    else
-                    {
-                        agents_comission = weight.Text * agent_row.Columns[4].Value;
-                    }
-                    //комиссия поставщика считается либо за вес, либо единожды за посылку вцелом
-                    ship.Content = weight.Text * agent_row.Columns[5].Value + agents_comission;
+                    agentsComission = weight.Text * _agentRow.Columns[3].Value;
                 }
-                catch (Exception ex)
-                { MessageBox.Show("Произошла ошибка при изменении веса: " + ex.Message); }
+                else
+                {
+                    agentsComission = weight.Text * _agentRow.Columns[4].Value;
+                }
+
+                //комиссия поставщика считается либо за вес, либо единожды за посылку вцелом
+                ship.Content = weight.Text * _agentRow.Columns[5].Value + agentsComission;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Произошла ошибка при изменении веса: {ex.Message}");
             }
         }
 
 
         private void category_DropDownClosed(object sender, System.EventArgs e)
         {
-            foreach (Microsoft.Office.Interop.Excel.Worksheet sh in wbook.Worksheets)
+            foreach (Microsoft.Office.Interop.Excel.Worksheet sh in _wbook.Worksheets)
             {
                 if (sh.Name != category.SelectionBoxItem.ToString())
-                { continue; }
-
-                weight.Text = Convert.ToInt32((sh.Cells[2, 5] as Microsoft.Office.Interop.Excel.Range).Value);
-                int agents_comission = 0;
-                //комиссия поставщика считается либо за вес, либо единожды за посылку вцелом
-                if (agent_row.Columns[3].Value)
                 {
-                    agents_comission = weight.Text * agent_row.Columns[3].Value;
+                    continue;
+                }
+
+                weight.Text = Convert.ToInt32((sh.Cells[2, 5] as Microsoft.Office.Interop.Excel.Range)?.Value);
+                var agentsComission = 0;
+                //комиссия поставщика считается либо за вес, либо единожды за посылку вцелом
+                if (_agentRow.Columns[3].Value)
+                {
+                    agentsComission = weight.Text * _agentRow.Columns[3].Value;
                 }
                 else
                 {
-                    agents_comission = weight.Text * agent_row.Columns[4].Value;
+                    agentsComission = weight.Text * _agentRow.Columns[4].Value;
                 }
+
                 //комиссия поставщика считается либо за вес, либо единожды за посылку вцелом
-                ship.Content = weight.Text * agent_row.Columns[5].Value + agents_comission;
+                ship.Content = weight.Text * _agentRow.Columns[5].Value + agentsComission;
                 return;
             }
         }
 
         private void agent_DropDownClosed(object sender, System.EventArgs e)
         {
-            Microsoft.Office.Interop.Excel.Worksheet wsheet_agents = wbook_agents.Worksheets[1];
-            foreach (Microsoft.Office.Interop.Excel.Range row in wsheet_agents.UsedRange.Rows)
+            Microsoft.Office.Interop.Excel.Worksheet wsheetAgents = _wbookAgents.Worksheets[1];
+            foreach (Microsoft.Office.Interop.Excel.Range row in wsheetAgents.UsedRange.Rows)
             {
                 if (row.Columns[6].Text == agent.SelectionBoxItem.ToString())
                 {
-                    agent_row = row;
+                    _agentRow = row;
                 }
             }
         }
@@ -267,7 +288,8 @@ namespace MISCA_App
 
         private void price_KeyDown(object sender, KeyEventArgs e)
         {
-            if (!((e.Key.GetHashCode() >= 34) && (e.Key.GetHashCode() <= 43)) && !((e.Key.GetHashCode() >= 74) && (e.Key.GetHashCode() <= 83)) && e.Key.GetHashCode() == 73)
+            if (!((e.Key.GetHashCode() >= 34) && (e.Key.GetHashCode() <= 43)) &&
+                !((e.Key.GetHashCode() >= 74) && (e.Key.GetHashCode() <= 83)) && e.Key.GetHashCode() == 73)
             {
                 e.Handled = true;
             }
@@ -295,25 +317,25 @@ namespace MISCA_App
             //int link_column = 3;
             stock_grid.ItemsSource = StockRowCollection;
 
-            for (int i = 1; i <= last_column; i++)
+            for (int i = 1; i <= LastColumn; i++)
             {
-                string header = wbook.Worksheets[1].Cells[1, i].Text;
+                string header = _wbook.Worksheets[1].Cells[1, i].Text;
                 stock_grid.Columns[i - 1].Header = header;
                 stock_grid.Columns[i - 1].MaxWidth = 200;
                 if (header == "Ссылка")
                 {
-                    link_column = i;
+                    _linkColumn = i;
                 }
             }
 
             foreach (CheckBox ch in category_panel.Children)
             {
-                Microsoft.Office.Interop.Excel.Worksheet wsheet = wbook.Worksheets[ch.Content];
+                Microsoft.Office.Interop.Excel.Worksheet wsheet = _wbook.Worksheets[ch.Content];
                 if (ch.IsChecked == true)
                 {
                     foreach (Microsoft.Office.Interop.Excel.Range row in wsheet.UsedRange.Rows)
                     {
-                        if (row.Row == 1 )
+                        if (row.Row == 1)
                             continue;
 
                         using (WebClient client = new WebClient())
@@ -321,7 +343,7 @@ namespace MISCA_App
                             try
                             {
                                 client.Encoding = System.Text.Encoding.GetEncoding("GB2312");
-                                reply = client.DownloadString(row.Columns[link_column].Text);
+                                reply = client.DownloadString(row.Columns[_linkColumn].Text);
                             }
                             catch (WebException ex)
                             {
