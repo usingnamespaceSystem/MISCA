@@ -234,22 +234,29 @@ namespace MISCA_App
                     if (name.Text.Contains(key_words[n]))
                     {
                         category.SelectedItem = sh.Name;
-                        if (category.SelectionBoxItem.ToString() == "Верхняя" || category.SelectionBoxItem.ToString() == "Лофферы"
-                            || category.SelectionBoxItem.ToString() == "Ботинки" || category.SelectionBoxItem.ToString() == "Босоножки"
-                            || category.SelectionBoxItem.ToString() == "Кеды")
+                        weight.Text = Convert.ToInt32((sh.Cells[2, 5] as Microsoft.Office.Interop.Excel.Range).Value);
+                        int agents_comission=0;
+                        //комиссия посредника считается либо за вес, либо единожды за посылку вцелом
+                        if (agent_row.Columns[3].Value)
                         {
-                            ship.Text = "700";
+                            agents_comission = weight.Text * agent_row.Columns[3].Value;
                         }
-                        else if (category.SelectionBoxItem.ToString() == "Топы")
+                        else
                         {
-                            ship.Text = "500";
+                            agents_comission = weight.Text * agent_row.Columns[4].Value;
                         }
-                        else ship.Text = "600";
+                        //комиссия посредника считается либо за вес, либо единожды за посылку вцелом
+                        ship.Content = weight.Text * agent_row.Columns[5].Value + agents_comission;
                         return;
                     }
                 }
             }
 
+            //if (category.SelectionBoxItem.ToString() == "Лофферы" || category.SelectionBoxItem.ToString() == "Ботинки" 
+            //    || category.SelectionBoxItem.ToString() == "Босоножки" || category.SelectionBoxItem.ToString() == "Кеды")
+            //{
+
+            //}
         }
     }
 }
