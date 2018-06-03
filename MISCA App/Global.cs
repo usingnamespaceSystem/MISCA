@@ -25,8 +25,8 @@ namespace MISCA_App
 
         double cny;
         string imagesHidden = string.Empty;
-        bool isload = true, ismain = false, isImgAdded = false;
-        int i = 0, rowIdx = 1, count = 1, img_count=12;
+        bool isload = true, ismain = false, isImgAdded = false, isSizeInTable = false;
+        int i = 0, rowIdx = 1, count = 1, img_count=12, link_column = 0, last_column = 11;
         string content = string.Empty;
         int cat_id = 1;
 

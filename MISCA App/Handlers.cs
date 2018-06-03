@@ -146,6 +146,23 @@ namespace MISCA_App
             WebControl.GoForward();
         }
 
+        private void parse_size_Click(object sender, RoutedEventArgs e)
+        {
+            size_table.ItemsSource = SizeRowCollection;
+            List<string> parameters = new List<string>();
+            parameters.AddRange(size.Text.Split(','));
+            for (int i = 1; i <= parameters.Count; i++)
+            {
+                size_table.Columns[i - 1].Header = parameters[i - 1];
+            }
+            //size_table.Items.Add(new ListCollectionView(parameters));
+            SizeRow new_row = new SizeRow() { field1 = string.Empty, field2 = string.Empty, field3 = string.Empty, field4 = string.Empty, field5 = string.Empty };
+            SizeRowCollection.Add(new_row);
+
+            isSizeInTable = true;
+        }
+
+
         private void back_Click(object sender, RoutedEventArgs e)
         {
             WebControl.GoBack();
