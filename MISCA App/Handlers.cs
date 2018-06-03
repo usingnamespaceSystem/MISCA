@@ -267,5 +267,22 @@ namespace MISCA_App
                 e.Handled = true;
             }
         }
+
+        private void select_all_category(object sender, RoutedEventArgs e)
+        {
+            foreach (CheckBox ch in category_panel.Children)
+            {
+                ch.IsChecked = true;
+            }
+        }
+
+        private void unselect_all_category(object sender, RoutedEventArgs e)
+        {
+            foreach (CheckBox ch in category_panel.Children)
+            {
+                ch.IsChecked = false;
+            }
+        }
+
     }
 }
