@@ -4,6 +4,11 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Diagnostics;
 using System.IO;
+using System.Windows.Data;
+using System.Collections.Generic;
+using System.Net;
+using System.Text;
+using System.Reflection;
 
 namespace MISCA_App
 {
