@@ -46,25 +46,32 @@ namespace MISCA_App
         /// </summary>
         private void Findprice()
         {
+            string str_price = string.Empty;
             Regex price_world_mall = new Regex("<span class=\"tm-price\">" + @"(.+)" + "</span>");
-            Regex price_tao = new Regex("<em class=\"tb-rmb\">¥</em>" + @"(.+)" + "</strong>");
+            Regex price_tao1 = new Regex("<em class=\"tb-rmb-num\">" + @"(.+)" + "</em>");
+            Regex price_tao2 = new Regex("<em class=\"tb-rmb\">¥</em>" + @"(.+)" + "</strong>");
 
             MatchCollection matches_price_world_mall = price_world_mall.Matches(content);
-            MatchCollection matches_price_tao = price_tao.Matches(content);
+            MatchCollection matches_price_tao1 = price_tao1.Matches(content);
+            MatchCollection matches_price_tao2 = price_tao2.Matches(content);
 
             if (matches_price_world_mall.Count > 0)
             {
-                price.Text = matches_price_world_mall[0].Groups[1].ToString();
+                str_price = matches_price_world_mall[0].Groups[1].ToString();
             }
-            else if (matches_price_tao.Count > 0)
+            else if (matches_price_tao1.Count > 0)
             {
-                price.Text = matches_price_tao[0].Groups[1].ToString();
+                str_price = matches_price_tao1[0].Groups[1].ToString();
+            }
+            else if (matches_price_tao2.Count > 0)
+            {
+                str_price = matches_price_tao2[0].Groups[1].ToString();
             }
 
-            if (price.Text.Contains('.'))
-                price.Text = price.Text.Replace('.', ',');
+            if (str_price.Contains('.'))
+                price.Text = str_price.Replace('.', ',');
             if (price.Text.Contains('"'))
-                price.Text = price.Text.Trim('"');
+                price.Text = str_price.Trim('"');
         }
 
         private void Findseller()
