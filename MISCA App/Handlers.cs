@@ -176,12 +176,12 @@ namespace MISCA_App
 
         private void change_price(object sender, TextChangedEventArgs e)
         {
-            if (price.Text != String.Empty && perc.Text != String.Empty && ship.Text != String.Empty)
+            if (price.Text != String.Empty && perc.Text != String.Empty)
             {
                 try
                 {
-                    final_price.Text = Math.Round(((Convert.ToDouble(price.Text) * (1.07 + Convert.ToDouble(perc.Text) / 100.0) + 20) * cny + Convert.ToDouble(ship.Text)), 0).ToString();
-                    price1.Content = "(" + Math.Round(((Convert.ToDouble(price.Text) * 1.07 + 20) * cny + Convert.ToDouble(ship.Text)), 0).ToString() + ")";
+                    final_price.Text = Math.Round(((Convert.ToDouble(price.Text) * (1.07 + Convert.ToDouble(perc.Text) / 100.0) + 20) * cny + Convert.ToDouble(ship.Content)), 0).ToString();
+                    income.Content = (Convert.ToDouble(final_price.Text) - Math.Round(((Convert.ToDouble(price.Text) * 1.07 + 20) * cny + Convert.ToDouble(ship.Content)), 0)).ToString();
                 }
                 catch (Exception ex)
                 { MessageBox.Show("Произошла ошибка при изменении цены: " + ex.Message); }
