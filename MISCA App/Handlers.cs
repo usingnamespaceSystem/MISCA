@@ -191,17 +191,38 @@ namespace MISCA_App
 
         private void category_DropDownClosed(object sender, System.EventArgs e)
         {
-            if (category.SelectionBoxItem.ToString() == "Верхняя" || category.SelectionBoxItem.ToString() == "Лофферы"
-            || category.SelectionBoxItem.ToString() == "Ботинки" || category.SelectionBoxItem.ToString() == "Босоножки"
-            || category.SelectionBoxItem.ToString() == "Кеды")
+            foreach (Microsoft.Office.Interop.Excel.Worksheet sh in wbook.Worksheets)
             {
-                ship.Text = "700";
+                if (sh.Name != category.SelectionBoxItem.ToString())
+                { continue; }
+
+                weight.Text = Convert.ToInt32((sh.Cells[2, 5] as Microsoft.Office.Interop.Excel.Range).Value);
+                int agents_comission = 0;
+                //комиссия поставщика считается либо за вес, либо единожды за посылку вцелом
+                if (agent_row.Columns[3].Value)
+                {
+                    agents_comission = weight.Text * agent_row.Columns[3].Value;
+                }
+                else
+                {
+                    agents_comission = weight.Text * agent_row.Columns[4].Value;
+                }
+                //комиссия поставщика считается либо за вес, либо единожды за посылку вцелом
+                ship.Content = weight.Text * agent_row.Columns[5].Value + agents_comission;
+                return;
             }
-            else if (category.SelectionBoxItem.ToString() == "Топы")
+        }
+
+        private void agent_DropDownClosed(object sender, System.EventArgs e)
+        {
+            Microsoft.Office.Interop.Excel.Worksheet wsheet_agents = wbook_agents.Worksheets[1];
+            foreach (Microsoft.Office.Interop.Excel.Range row in wsheet_agents.UsedRange.Rows)
             {
-                ship.Text = "500";
+                if (row.Columns[6].Text == agent.SelectionBoxItem.ToString())
+                {
+                    agent_row = row;
+                }
             }
-            else ship.Text = "600";
         }
 
 
