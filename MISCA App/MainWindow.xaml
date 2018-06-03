@@ -4,71 +4,276 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MISCA_App"
-        
         xmlns:awe="http://schemas.awesomium.com/winfx" x:Class="MISCA_App.MainWindow"
-        
         mc:Ignorable="d"
-        Title="MISCA APP" Height="914.758" Width="1168" Closing="Window_Closing" Loaded="Window_Loaded" Icon="bowl.ico">
-    <Grid KeyDown="link_KeyDown">
-        <Grid.RowDefinitions>
-            <RowDefinition/>
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition/>
-        </Grid.ColumnDefinitions>
+        Title="MISCA APP" Height="1100" Width="1600" Closing="Window_Closing" Loaded="Window_Loaded" Icon="bowl.ico" Background="#f8f7f7">
+    <Window.Resources>
+        <Style TargetType="Button">
+            <Setter Property="FontFamily" Value="Verdana" />
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="Background" Value="#c09c98" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="BorderThickness" Value="0" />
+        </Style>
+        <Style TargetType="{x:Type TabItem}">
+            <Setter Property="Height" Value="30"/>
+            <Setter Property="FontFamily" Value="Verdana" />
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="Padding" Value="10 10"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type TabItem}">
+                        <Border>
+                            <Grid>
+                                <Grid>
+                                    <Border x:Name="border" 
+                                            CornerRadius="3,3,0,0"
+                                            Background="#fbe0dd"/>
+                                </Grid>
+                                <ContentPresenter ContentSource="Header"
+                                                      HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                      VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                            </Grid>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsSelected"
+                                     Value="True">
+                                <Setter TargetName="border"
+                                        Property="Background"
+                                        Value="#f9c8c2" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <!--<Style TargetType="TabItem">
+            <Setter Property="FontFamily" Value="Verdana" />
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="Background" Value="#f9c8c2" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Style.Triggers>
+                <Trigger Property="IsSelected" Value="True">
+                    <Setter Property="Background" Value="#f9c8c2" />
+                </Trigger>
+                <Trigger Property="IsSelected" Value="False">
+                    <Setter Property="Background" Value="#fbe0dd" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>-->
+        <Style TargetType="Label">
+            <Setter Property="FontFamily" Value="Verdana" />
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="Foreground" Value="White" />
+        </Style>
+        <Style TargetType="CheckBox">
+            <Setter Property="FontFamily" Value="Verdana" />
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="BorderThickness" Value="0" />
+        </Style>
+        <Style TargetType="TextBox">
+            <Setter Property="FontFamily" Value="Verdana" />
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="Background" Value="#fbe0dd" />
+            <Setter Property="BorderThickness" Value="0" />
+        </Style>
+        <Style TargetType="ComboBox">
+            <Setter Property="FontFamily" Value="Verdana" />
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="Background" Value="#fbe0dd" />
+            <Setter Property="BorderThickness" Value="0" />
+            <!--<Style.Triggers>
+                <Trigger Property="Unselected" Value="False">
+                    <Setter Property="Background" Value="#fbe0dd" />
+                </Trigger>
+            </Style.Triggers>-->
+        </Style>
+        <Style TargetType="ComboBoxItem">
+            <Setter Property="FontFamily" Value="Verdana" />
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="Background" Value="#fbe0dd" />
+            <Setter Property="BorderThickness" Value="0" />
+        </Style>
+        <Style TargetType="ContextMenu">
+            <Setter Property="FontFamily" Value="Verdana" />
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="Background" Value="#fbe0dd" />
+            <Setter Property="BorderThickness" Value="0" />
+        </Style>
+        <Style TargetType="DataGrid">
+            <Setter Property="FontFamily" Value="Verdana" />
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="Background" Value="#fbe0dd" />
+            <Setter Property="BorderThickness" Value="0" />
+        </Style>
+        <Style TargetType="DataGridCell">
+            <Setter Property="FontFamily" Value="Verdana" />
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="Foreground" Value="Gray" />
+            <Setter Property="Background" Value="#fbe0dd" />
+            <Setter Property="BorderThickness" Value="0" />
+        </Style>
+        <Style TargetType="DataGridColumnHeader">
+            <Setter Property="FontFamily" Value="Verdana" />
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="Background" Value="#e88b88" />
+            <Setter Property="BorderThickness" Value="0" />
+        </Style>
+    </Window.Resources>
+    <Grid>
+        <!--<Button x:Name="button" Margin="0,6,10,0" VerticalAlignment="Top" HorizontalAlignment="Right" BorderThickness="0">
+            <Image Source="MISCA App/cross.jpg"></Image>
+        </Button>-->
+        <TabControl x:Name="tabControl" Margin="0,20,0,0" Background="#f9c8c2">
+            <TabItem Header="Добавление товара" Height="30" Padding="10,0,10,0" Margin="0" Width="200">
+                <Grid KeyDown="link_KeyDown">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="30*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1.3*"/>
+                        <ColumnDefinition Width="120"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="100"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="1.5*"/>
+                    </Grid.ColumnDefinitions>
+                    <ScrollViewer HorizontalAlignment="Left" Grid.Column="0" Grid.RowSpan="2" Margin="10,22,0,0" VerticalScrollBarVisibility="Auto" Width="326" Height="848" VerticalAlignment="Top">
+                        <StackPanel x:Name="img" ForceCursor="True" OverridesDefaultStyle="True" />
+                    </ScrollViewer>
+                    <StackPanel Grid.Column="1" HorizontalAlignment="Left">
+                        <Label x:Name="label1" Content="Ссылка" Margin="0,5" VerticalAlignment="Center"/>
+                        <Label x:Name="label2_Copy" Content="Категория" Margin="0,5" VerticalAlignment="Center"/>
+                        <Label x:Name="label2" Content="Имя" Margin="0,5" VerticalAlignment="Center"/>
+                        <Label x:Name="label4" Content="Производитель" Margin="0,5" VerticalAlignment="Center"/>
+                        <Label x:Name="label9" Content="Посредник" Margin="0,5" VerticalAlignment="Center"/>
+                    </StackPanel>
+                    <WrapPanel HorizontalAlignment="Left" Grid.Column="2" Margin="0">
+                        <TextBox x:Name="link" Height="26" Margin="5,5" TextWrapping="NoWrap" Width="191"/>
+                        <Button x:Name="fusropars" Content="Искать" Click="fusropars_Click" Height="26" VerticalAlignment="Top" Width="73" Margin="5,5"/>
+                        <ComboBox x:Name="category" DropDownClosed="category_DropDownClosed" Width="276" Height="26" Margin="5,5"/>
+                        <TextBox x:Name="name" Height="26" TextWrapping="Wrap" Width="274" Margin="5,5"/>
+                        <TextBox x:Name="prod" Height="26" TextWrapping="Wrap" Width="275" Margin="5,5"/>
+                        <ComboBox x:Name="agent" Width="275" DropDownClosed="agent_DropDownClosed" Height="26" Margin="5"/>
+                        <Button x:Name="reload" Content="Перезагрузить" Click="reload_Click" Height="26" VerticalAlignment="Top" Width="129" Margin="5,5"/>
+                        <Button x:Name="back" Content="→" HorizontalAlignment="Left" Height="26" VerticalAlignment="Top" Width="24" Margin="5,5" RenderTransformOrigin="0.5,0.5" Click="back_Click">
+                            <Button.RenderTransform>
+                                <TransformGroup>
+                                    <ScaleTransform ScaleY="1" ScaleX="-1"/>
+                                    <SkewTransform AngleY="0" AngleX="0"/>
+                                    <RotateTransform Angle="0"/>
+                                    <TranslateTransform/>
+                                </TransformGroup>
+                            </Button.RenderTransform>
+                        </Button>
+                        <Button x:Name="forward" Content="→" HorizontalAlignment="Left" Height="26" VerticalAlignment="Top" Width="24" Margin="5,5" Click="forward_Click"/>
+                    </WrapPanel>
 
-        <awe:WebControl x:Name="WebControl" Margin="356,169,43,52" LoadingFrame="WebControl_LoadingFrame" LoadingFrameComplete="WebControl_LoadingFrameComplete" ScrollViewer.HorizontalScrollBarVisibility="Visible"/>
-        <WrapPanel Margin="356,14,0,0" Height="155" VerticalAlignment="Top" HorizontalAlignment="Left" Width="367">
-            <Label x:Name="label1" Content="Ссылка" HorizontalAlignment="Center" VerticalAlignment="Center" Width="59"/>
-            <TextBox x:Name="link" Height="22" TextWrapping="NoWrap" Width="187"/>
-            <Button x:Name="fusropars" Content="FUS RO PARSE" Click="fusropars_Click" Height="22" VerticalAlignment="Top" Width="98" Margin="10"/>
-            <Label x:Name="label2_Copy" Content="Категория" HorizontalAlignment="Center" VerticalAlignment="Center" Width="67"/>
-            <ComboBox x:Name="category" Width="219" DropDownClosed="category_DropDownClosed"/>
-            <CheckBox x:Name="personal" Content="Личное" Height="18" Width="66"/>
-            <Label x:Name="label2" Content="Имя" HorizontalAlignment="Center" VerticalAlignment="Center" Width="67"/>
-            <TextBox x:Name="name" Height="22" TextWrapping="Wrap" Width="287"/>
-            <Label x:Name="label4" Content="Производитель" HorizontalAlignment="Center" VerticalAlignment="Center" Width="100"/>
-            <TextBox x:Name="prod" Height="22" TextWrapping="Wrap" Width="254"/>
-            <Button x:Name="reload" Content="Перезагрузить" Click="reload_Click" Height="22" VerticalAlignment="Top" Width="129" Margin="5,5"/>
-            <Button x:Name="back" Content="→" HorizontalAlignment="Left" Height="22" VerticalAlignment="Top" Width="24" Margin="5,5" RenderTransformOrigin="0.5,0.5" Click="back_Click">
-                <Button.RenderTransform>
-                    <TransformGroup>
-                        <ScaleTransform ScaleY="1" ScaleX="-1"/>
-                        <SkewTransform AngleY="0" AngleX="0"/>
-                        <RotateTransform Angle="0"/>
-                        <TranslateTransform/>
-                    </TransformGroup>
-                </Button.RenderTransform>
-            </Button>
-            <Button x:Name="forward" Content="→" HorizontalAlignment="Left" Height="22" VerticalAlignment="Top" Width="24" Margin="5,5" Click="forward_Click"/>
+                    <StackPanel Grid.Column="3" HorizontalAlignment="Left" Margin="20,0,0,0">
+                        <Label x:Name="label5" Content="Материал" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,5"/>
+                        <Label x:Name="label6" Content="Размер" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,5,0,25"/>
+                        <Label x:Name="label7" Content="Вес" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,5"/>
+                        <Label x:Name="label3" Content="Цена" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,5" />
+                        <Label x:Name="label8" Content="Прибыль" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,5"/>
+                    </StackPanel>
 
-        </WrapPanel>
-        <ScrollViewer HorizontalAlignment="Left"  Margin="10,22,0,0" VerticalScrollBarVisibility="Auto" Width="326" Height="848" VerticalAlignment="Top">
-            <StackPanel x:Name="img" ForceCursor="True" OverridesDefaultStyle="True" />
-        </ScrollViewer>
-        <WrapPanel Margin="745,22,0,0" Height="147" VerticalAlignment="Top" HorizontalAlignment="Left" Width="372">
-            <Label x:Name="label5" Content="Материал" HorizontalAlignment="Center" VerticalAlignment="Center" Width="70"/>
-            <TextBox x:Name="material" Height="22" TextWrapping="Wrap" Width="298"/>
-            <Label x:Name="label6" Content="Размер" HorizontalAlignment="Center" VerticalAlignment="Center" Width="70"/>
-            <TextBox x:Name="size" Height="48" TextWrapping="Wrap" Width="298"/>
-            <Label x:Name="label3" Content="Цена" HorizontalAlignment="Center" VerticalAlignment="Center" Width="70"/>
-            <TextBox x:Name="price" Height="22" TextWrapping="Wrap" Width="40" TextChanged="change_price" KeyDown="price_KeyDown"/>
-            <Label x:Name="label3_Copy" Content="+" HorizontalAlignment="Center" VerticalAlignment="Center" Width="22"/>
-            <TextBox x:Name="perc" Height="22" TextWrapping="Wrap" Width="24" TextChanged="change_price" KeyDown="price_KeyDown"/>
-            <Label x:Name="label3_Copy1" Content="%  +" HorizontalAlignment="Center" VerticalAlignment="Center" Width="38"/>
-            <TextBox x:Name="ship" Height="22" TextWrapping="Wrap" Text="700" Width="38" TextChanged="change_price" KeyDown="price_KeyDown"/>
+                    <WrapPanel Grid.Column="4" HorizontalAlignment="Left">
+                        <TextBox x:Name="material" Height="26" TextWrapping="Wrap" Width="280" Margin="5"/>
+                        <TextBox x:Name="size" Height="48" TextWrapping="Wrap" Width="163" Margin="5"/>
+                        <Button x:Name="parse_size" Content="Применить" Click="parse_size_Click" Height="26" VerticalAlignment="Top" Width="100" Margin="5" RenderTransformOrigin="0.5,0.5">
+                            <Button.RenderTransform>
+                                <TransformGroup>
+                                    <ScaleTransform/>
+                                    <SkewTransform/>
+                                    <RotateTransform Angle="0.087"/>
+                                    <TranslateTransform/>
+                                </TransformGroup>
+                            </Button.RenderTransform>
+                        </Button>
+                        <TextBox x:Name="weight" HorizontalAlignment="Center" VerticalAlignment="Center" TextChanged="change_weight" Width="86" Height="26" Margin="5"/>
+                        <TextBlock Text="&#xA;" Width="166" Height="26" Margin="5"/>
+                        <TextBox x:Name="price" Height="26" TextWrapping="Wrap" Width="46" TextChanged="change_price" KeyDown="price_KeyDown" Margin="5,5,0,5"/>
+                        <Label x:Name="label3_Copy" Content="+" HorizontalAlignment="Center" VerticalAlignment="Center" Width="22" Height="26" Margin="0,5"/>
+                        <TextBox x:Name="perc" Height="26" TextWrapping="Wrap" Width="32" TextChanged="change_price" KeyDown="price_KeyDown" Margin="0,5"/>
+                        <Label x:Name="label3_Copy1" Content="%  +" HorizontalAlignment="Center" VerticalAlignment="Center" Width="46" Margin="0,5"/>
+                        <Label x:Name="ship" Content="0" Height="26" Width="47" Margin="0,5"/>
+                        <Label x:Name="label3_Copy2" Content="=" HorizontalAlignment="Center" VerticalAlignment="Center" Width="19" Height="26" Margin="0,5"/>
+                        <TextBox x:Name="final_price" Height="26" TextWrapping="Wrap" Width="57" KeyDown="price_KeyDown" Margin="5"/>
+                        <Label x:Name="income" Content="0" HorizontalAlignment="Center" VerticalAlignment="Center" Width="106" Height="26" Margin="5"/>
+                        <CheckBox Content="Загрузить в Инстаграм" Checked="upload_to_inst" Height="26" VerticalAlignment="Bottom" Margin="5,5,5,0"/>
+                        <Button x:Name="save" x:Uid="sa" Content="Сохранить товар" Height="26" VerticalAlignment="Top" Width="151" Margin="5,0,5,5" Click="save_Click" HorizontalAlignment="Right"/>
+                    </WrapPanel>
 
-            <Label x:Name="label3_Copy2" Content="=" HorizontalAlignment="Center" VerticalAlignment="Center" Width="19"/>
-            <TextBox x:Name="final_price" Height="22" TextWrapping="Wrap" Width="55" KeyDown="price_KeyDown"/>
-            <Label x:Name="price1" Content="" HorizontalAlignment="Center" VerticalAlignment="Center" Width="56" Margin="5,0"/>
-            <Button x:Name="save" x:Uid="sa" Content="Добавить" Height="22" VerticalAlignment="Top" Width="129" Margin="5,18" Click="save_Click"/>
-
-        </WrapPanel>
-        <Label x:Name="status" Content="" Margin="0,0,10,4" Height="32" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="131"/>
-        <Label x:Name="img_checking_count" Content="0" HorizontalAlignment="Left" Width="30" Margin="362,0,0,14" Panel.ZIndex="100" Height="26" VerticalAlignment="Bottom"/>
-        <Button x:Name="img_added" Content="Доп. фото добавлено" Margin="397,0,0,14" HorizontalAlignment="Left" Width="133" Click="img_added_Click" Height="22" VerticalAlignment="Bottom" Panel.ZIndex="100"/>
-        <Button x:Name="img_deleted" Content="-" Margin="535,0,0,14" HorizontalAlignment="Left" Width="30" Click="img_deleted_Click" Height="22" VerticalAlignment="Bottom" Panel.ZIndex="100"/>
-        <awe:WebControl x:Name="WebControl_promo" Margin="1067,782,43,52"/>
-
+                    <WrapPanel HorizontalAlignment="Center" Grid.Column="5">
+                        <DataGrid x:Name="size_table" AutoGenerateColumns="False" 
+                          Height="158" 
+                          HorizontalAlignment="Center" 
+                          VerticalAlignment="Top" 
+                          Width="364" Margin="5">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn MinWidth="50" Binding="{Binding field1}" IsReadOnly="False"/>
+                                <DataGridTextColumn MinWidth="50" Binding="{Binding field2}" IsReadOnly="False"/>
+                                <DataGridTextColumn  MinWidth="50" Binding="{Binding field3}" IsReadOnly="False"/>
+                                <DataGridTextColumn  MinWidth="50" Binding="{Binding field4}" IsReadOnly="False"/>
+                                <DataGridTextColumn  MinWidth="50" Binding="{Binding field5}" IsReadOnly="False"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </WrapPanel>
+                    <awe:WebControl x:Name="WebControl" Margin="5,259,46,52" LoadingFrame="WebControl_LoadingFrame" LoadingFrameComplete="WebControl_LoadingFrameComplete" ScrollViewer.HorizontalScrollBarVisibility="Visible" Grid.ColumnSpan="5" Grid.Column="1" Height="650"/>
+                    <Label x:Name="status" Content="" Margin="0,0,10,4" Height="32" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="131" Grid.Column="3"/>
+                    <Label x:Name="img_checking_count" Content="0" HorizontalAlignment="Left" Width="30" Margin="1,0,0,14" Panel.ZIndex="100" Height="26" VerticalAlignment="Bottom" Grid.Column="1"/>
+                    <awe:WebControl x:Name="WebControl_promo" Margin="103,782,43,52" Grid.Column="3"/>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Проверка наличия" Height="30" Padding="10,0,10,0" Width="200">
+                <Grid Name="stock_tab_grid">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto" MinWidth="1269"/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel x:Name="stack_panel2" Grid.Column="0">
+                        <TextBlock Margin="20,30,20,10" Text="Выберите товарные категории для проверки" TextWrapping="WrapWithOverflow"
+                                   Grid.Column="0" HorizontalAlignment="Left" Width="261" Height="38" VerticalAlignment="Top" Grid.ColumnSpan="3"/>
+                        <CheckBox Content="Выбрать все" Checked="select_all_category" Unchecked="unselect_all_category" Grid.Column="0" Margin="10" Width="200" VerticalAlignment="Top" HorizontalAlignment="Left" Height="21" Grid.ColumnSpan="3"/>
+                        <StackPanel x:Name="category_panel" Grid.Column="0" Margin="10">
+                        </StackPanel>
+                        <Button x:Name="check_available" Content="Запустить проверку" Click="check_available_click" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Top" Width="191" Height="26" Grid.ColumnSpan="3" Margin="10"/>
+                        <Button x:Name="save_available" Content="Сохранить результат" Click="save_available_click" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Top" Width="191" Height="26" Grid.ColumnSpan="2" Margin="10"/>
+                        <TextBox x:Name="link_stock" Grid.Column="4" Margin="4,500,960,499"/>
+                    </StackPanel>
+                        <DataGrid x:Name="stock_grid" Grid.Column="1" MaxWidth="1200">
+                        <!--<DataGrid.Columns>
+                            <DataGridTextColumn  MaxWidth="200" Binding="{Binding stock_article}" IsReadOnly="False"/>
+                            <DataGridTextColumn  MaxWidth="200" Binding="{Binding stock_status}" IsReadOnly="False"/>
+                            <DataGridTextColumn  MaxWidth="200" Binding="{Binding stock_link}" IsReadOnly="False"/>
+                            <DataGridTextColumn  MaxWidth="200" Binding="{Binding stock_name}" IsReadOnly="False"/>
+                            <DataGridTextColumn  MaxWidth="200" Binding="{Binding stock_seller}" IsReadOnly="False"/>
+                            <DataGridTextColumn  MaxWidth="200" Binding="{Binding stock_material}" IsReadOnly="False"/>
+                            <DataGridTextColumn  MaxWidth="200" Binding="{Binding stock_size}" IsReadOnly="False"/>
+                            <DataGridTextColumn  MaxWidth="200" Binding="{Binding stock_price}" IsReadOnly="False"/>
+                            <DataGridTextColumn  MaxWidth="200" Binding="{Binding stock_percent}" IsReadOnly="False"/>
+                            <DataGridTextColumn  MaxWidth="200" Binding="{Binding stock_shipping}" IsReadOnly="False"/>
+                            <DataGridTextColumn  MaxWidth="200" Binding="{Binding stock_summary}" IsReadOnly="False"/>
+                        </DataGrid.Columns>-->
+                    </DataGrid>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Загрузка в Инстаграм" Height="30" Padding="10,0,10,0" Width="200">
+            </TabItem>
+            <TabItem Header="Заказы" Height="30" Padding="10,0,10,0" Width="200">
+            </TabItem>
+            <TabItem Header="Статистика" Height="30" Padding="10,0,10,0" Width="200">
+            </TabItem>
+        </TabControl>
     </Grid>
 </Window>
