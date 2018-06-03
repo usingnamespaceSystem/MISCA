@@ -58,6 +58,8 @@ namespace MISCA_App
 
             string result = translate(feature, "zh", "ru");
             HtmlAgilityPack.HtmlDocument doc = new HtmlAgilityPack.HtmlDocument();
+            if (result == "")
+                return "";
             doc.LoadHtml(result);
             HtmlAgilityPack.HtmlNodeCollection translateNode = doc.DocumentNode.SelectNodes("//span[@id='result_box']");
 
@@ -95,11 +97,18 @@ namespace MISCA_App
             request.ContentType = "application/x-www-form-urlencoded";
             request.UserAgent = @"Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.8.0.4) Gecko/20060508 Firefox/1.5.0.4";
 
-            using (var requestStream = request.GetRequestStream())
-            using (var responseStream = request.GetResponse().GetResponseStream())
-            using (var reader = new StreamReader(responseStream, Encoding.UTF8))
+            //using (var requestStream = request.GetRequestStream())
+            try
             {
-                result = reader.ReadToEnd();
+                using (var responseStream = request.GetResponse().GetResponseStream())
+                using (var reader = new StreamReader(responseStream, Encoding.UTF8))
+                {
+                    result = reader.ReadToEnd();
+                }
+            }
+            catch
+            {
+                return "";
             }
 
             return result;
