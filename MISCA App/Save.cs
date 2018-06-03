@@ -13,16 +13,14 @@ namespace MISCA_App
 
         private void save_Click(object sender, RoutedEventArgs e)
         {
-
-            wsheet = wbook.Sheets[category.SelectionBoxItem.ToString()];
-
-            while (wsheet.Cells[rowIdx, 1].Value != null)
-                rowIdx++;
-
             if (name.Text.Length == 0 || final_price.Text.Length == 0)
                 MessageBox.Show("Введите имя и цену");
 
             WebClient wc = new WebClient();
+            wsheet = wbook.Sheets[category.SelectionBoxItem.ToString()];
+
+            while (wsheet.Cells[rowIdx, 1].Value != null)
+                rowIdx++;
 
             foreach (CheckingWB cwb in images)
             {
