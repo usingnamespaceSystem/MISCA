@@ -15,6 +15,7 @@ namespace MISCA_App
         public MainWindow()
         {
             InitializeComponent();
+
             //int ch_top = 0, ch_left= 0, margin_top = 20;
             //заполняем список категорий из excel-файла Products
             foreach (Microsoft.Office.Interop.Excel.Worksheet sh in wbook.Worksheets)

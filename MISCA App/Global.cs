@@ -11,6 +11,7 @@ namespace MISCA_App
 {
     public partial class MainWindow : Window
     {
+        private static readonly IniFile Config = new IniFile();
         [DllImport("Kernel32")]
         public static extern void AllocConsole();
 
@@ -33,12 +34,18 @@ namespace MISCA_App
 
         NotifyIcon nf = new NotifyIcon();
         static Microsoft.Office.Interop.Excel.Application app = new Microsoft.Office.Interop.Excel.Application();
-        Microsoft.Office.Interop.Excel.Workbook wbook = app.Workbooks.Open(AppDomain.CurrentDomain.BaseDirectory + "Products.xlsx");
-        Microsoft.Office.Interop.Excel.Workbook wbook_agents = app.Workbooks.Open(AppDomain.CurrentDomain.BaseDirectory + "Agents.xlsx");
+
+        private static readonly string WbookPath = Config.Read("products", "app");
+        private static readonly string WbookAgentsPath = Config.Read("agents", "app");
+        private static readonly string ImagesPath = Config.Read("images", "app");
+        
+        Microsoft.Office.Interop.Excel.Workbook wbook = app.Workbooks.Open(WbookPath);
+        Microsoft.Office.Interop.Excel.Workbook wbook_agents = app.Workbooks.Open(WbookAgentsPath);
+        
         Microsoft.Office.Interop.Excel.Worksheet wsheet;
         Microsoft.Office.Interop.Excel.Range agent_row;
 
-        DirectoryInfo dirInfo = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory + @"\Изображения\");
+        DirectoryInfo dirInfo = new DirectoryInfo(ImagesPath);
 
         public delegate void Translation();
         public delegate void Link();

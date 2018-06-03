@@ -368,5 +368,15 @@ namespace MISCA_App
                 }
             }
         }
+
+        private void upload_to_inst(object sender, RoutedEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void save_available_click(object sender, RoutedEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
