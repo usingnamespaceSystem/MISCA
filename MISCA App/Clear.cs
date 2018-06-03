@@ -19,6 +19,8 @@ namespace MISCA_App
 
             nf.Visible = false;
             isImgAdded = false;
+            isSizeInTable = false;
+            //isStockPageLoaded = false;
             isload = true;
 
             img_checking_count.Content = "0";
