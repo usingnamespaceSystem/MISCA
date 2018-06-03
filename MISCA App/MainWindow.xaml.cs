@@ -68,6 +68,7 @@ namespace MISCA_App
         //для редактирования строк в гриде наличия
         public class StockRow
         {
+            public string stock_category { get; set; }
             public string stock_article { get; set; }
             public string stock_status { get; set; }
             public string stock_name { get; set; }
