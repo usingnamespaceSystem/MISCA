@@ -20,7 +20,7 @@ namespace MISCA_App
             }
             catch
             {
-                cny =8.7;
+                cny = 8.7;
                 MessageBox.Show("Курс не получен");
             };
 
@@ -47,7 +47,6 @@ namespace MISCA_App
             }
         }
 
-
         private void reload_Click(object sender, RoutedEventArgs e)
         {
             WebControl.Reload(true);
@@ -65,15 +64,26 @@ namespace MISCA_App
                 {
                     string script = @"(function() { for (var i in g_config.promotion.promoData) { return g_config.promotion.promoData[i][0].price } }())";
                     promotion = WebControl_promo.ExecuteJavascriptWithResult(script);
-                   
+
                     if (promotion != "undefined")
                         price.Text = promotion.Trim('"').Replace('.', ',');
-                    
+
                     if (promotion == "undefined")
                         Findprice();
-                    
+
+                    if (price.Text.Contains("-"))
+                        price.Text = price.Text.Split('-')[1].Trim();
+
+                    if (price.Text != "")
+                        perc.Text = Convert.ToString(Math.Round(2500 / Convert.ToDecimal(price.Text.Replace('.', ',')), 0));
+
+                    if (perc.Text == "0" || perc.Text == "")
+                    {
+                        perc.Text = "20";
+                    }
+
                     WebControl_promo.Visibility = Visibility.Hidden;
-                 };
+                };
 
                 content = WebControl.ExecuteJavascriptWithResult("document.getElementsByTagName('html')[0].innerHTML");
 
@@ -84,19 +94,15 @@ namespace MISCA_App
                 Findmaterial();
 
                 Get_images();
-               
-                isload = false;
 
-                perc.Text = "20";
+                isload = false;
 
                 auto_category();
             }
         }
 
-
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-
             foreach (FileInfo file in dirInfo.GetFiles())
             {
                 file.Delete();
@@ -108,7 +114,7 @@ namespace MISCA_App
             }
             catch (Exception)
             { MessageBox.Show("Не удалось закрыть Excel"); }
-            
+
 
             app.Quit();
 
