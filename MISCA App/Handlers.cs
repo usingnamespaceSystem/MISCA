@@ -289,6 +289,41 @@ namespace MISCA_App
             }
         }
 
+        private int find_excel_col(Microsoft.Office.Interop.Excel.Worksheet fwsheet, string fheader)
+        {
+            foreach (Microsoft.Office.Interop.Excel.Range cell in fwsheet.Rows[1])
+            {
+                if (cell.Value == fheader)
+                {
+                    return cell.Column;
+                }
+            }
+
+            return 0;
+        }
+
+        private int find_excel_row(Microsoft.Office.Interop.Excel.Worksheet fwsheet, string fheader, string fvalue)
+        {
+            int fcolumn = 0;
+
+            fcolumn = find_excel_col(fwsheet, fheader);
+
+            if (fcolumn == 0)
+                return 0;
+
+            foreach (Microsoft.Office.Interop.Excel.Range row in fwsheet.UsedRange.Rows)
+            {
+                if (row.Columns[fcolumn].Value == fvalue)
+                {
+                    return row.Row;
+                }
+            }
+
+            return 0;
+        }
+
+        private void upload_to_inst(object sender, RoutedEventArgs e) { }
+
         private void check_available_click(object sender, RoutedEventArgs e)
         {
             string reply = string.Empty;
