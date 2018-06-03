@@ -200,7 +200,7 @@ namespace MISCA_App
                 try
                 {
                     int agents_comission = 0;
-                    //комиссия поставщика считается либо за вес, либо единожды за посылку вцелом
+                    //комиссия посредника считается либо за вес, либо единожды за посылку вцелом
                     if (agent_row.Columns[3].Value)
                     {
                         agents_comission = weight.Text * agent_row.Columns[3].Value;
@@ -209,7 +209,7 @@ namespace MISCA_App
                     {
                         agents_comission = weight.Text * agent_row.Columns[4].Value;
                     }
-                    //комиссия поставщика считается либо за вес, либо единожды за посылку вцелом
+                    //комиссия посрдника считается либо за вес, либо единожды за посылку вцелом
                     ship.Content = weight.Text * agent_row.Columns[5].Value + agents_comission;
                 }
                 catch (Exception ex)
@@ -227,7 +227,7 @@ namespace MISCA_App
 
                 weight.Text = Convert.ToInt32((sh.Cells[2, 5] as Microsoft.Office.Interop.Excel.Range).Value);
                 int agents_comission = 0;
-                //комиссия поставщика считается либо за вес, либо единожды за посылку вцелом
+                //комиссия посредника считается либо за вес, либо единожды за посылку вцелом
                 if (agent_row.Columns[3].Value)
                 {
                     agents_comission = weight.Text * agent_row.Columns[3].Value;
@@ -236,7 +236,7 @@ namespace MISCA_App
                 {
                     agents_comission = weight.Text * agent_row.Columns[4].Value;
                 }
-                //комиссия поставщика считается либо за вес, либо единожды за посылку вцелом
+                //комиссия посредника считается либо за вес, либо единожды за посылку вцелом
                 ship.Content = weight.Text * agent_row.Columns[5].Value + agents_comission;
                 return;
             }
