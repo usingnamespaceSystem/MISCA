@@ -329,8 +329,9 @@ namespace MISCA_App
                                 {
                                     StockRowCollection.Add(new StockRow()
                                     {
+                                        stock_category = ch.Content.ToString(),
                                         stock_article = row.Columns[1].Text,
-                                        stock_status = row.Columns[2].Text,
+                                        stock_status = "0",
                                         stock_name = row.Columns[3].Text,
                                         stock_link = row.Columns[4].Text,
                                         stock_seller = row.Columns[5].Text,
@@ -350,8 +351,9 @@ namespace MISCA_App
                         {
                             StockRowCollection.Add(new StockRow()
                             {
+                                stock_category = ch.Content.ToString(),
                                 stock_article = row.Columns[1].Text,
-                                stock_status = row.Columns[2].Text,
+                                stock_status = "0",
                                 stock_name = row.Columns[3].Text,
                                 stock_link = row.Columns[4].Text,
                                 stock_seller = row.Columns[5].Text,
