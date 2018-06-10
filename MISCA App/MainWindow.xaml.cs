@@ -31,10 +31,11 @@ namespace MISCA_App
                 if (!sh.Name.Contains("nul"))
                 {
                     category.Items.Add(sh.Name);
-                    CheckBox cat_check = new CheckBox();
+                    RadioButton cat_select = new RadioButton();
+                    cat_select.GroupName = "category_for_check_stock";
                     //cat_check.Margin = new Thickness(ch_left, ch_top, 0, 0);
-                    cat_check.Content = sh.Name;
-                    category_panel.Children.Add(cat_check);
+                    cat_select.Content = (string)sh.Name;
+                    category_panel.Children.Add(cat_select);
                     //ch_top += margin_top;
                 }
             }
@@ -71,33 +72,6 @@ namespace MISCA_App
                 if (_size_rows == null)
                     _size_rows = new ObservableCollection<SizeRow>();
                 return _size_rows;
-            }
-        }
-
-        //для редактирования строк в гриде наличия
-        public class StockRow
-        {
-            public string stock_category { get; set; }
-            public string stock_article { get; set; }
-            public string stock_status { get; set; }
-            public string stock_name { get; set; }
-            public string stock_link { get; set; }
-            public string stock_seller { get; set; }
-            public string stock_material { get; set; }
-            public string stock_size { get; set; }
-            public string stock_price { get; set; }
-            public string stock_percent { get; set; }
-            public string stock_shipping { get; set; }
-            public string stock_summary { get; set; }
-        }
-        private ObservableCollection<StockRow> _stock_rows;
-        public ObservableCollection<StockRow> StockRowCollection
-        {
-            get
-            {
-                if (_stock_rows == null)
-                    _stock_rows = new ObservableCollection<StockRow>();
-                return _stock_rows;
             }
         }
 
