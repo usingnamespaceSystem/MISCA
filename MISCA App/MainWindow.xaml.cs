@@ -3,7 +3,9 @@ using System.Windows.Controls;
 using System.Collections.ObjectModel;
 using System.Net;
 using System;
+using System.Data;
 using System.Collections.Generic;
+using System.Data.OleDb;
 
 namespace MISCA_App
 {
@@ -15,6 +17,13 @@ namespace MISCA_App
         public MainWindow()
         {
             InitializeComponent();
+            string fileName = AppDomain.CurrentDomain.BaseDirectory + "заказы.xlsx";
+            string connectionString = string.Format("provider=Microsoft.ACE.OLEDB.12.0; data source={0};Extended Properties=Excel 8.0;", fileName);
+            DataSet ds = Parse(fileName);
+            orders_grid.ItemsSource = Parse(AppDomain.CurrentDomain.BaseDirectory + "заказы.xlsx").Tables["Table1"].DefaultView;
+            //foreach (DataGridColumn col in orders_grid.Columns)
+            //    col.MaxWidth = new DataGridLenght(200);
+
             //int ch_top = 0, ch_left= 0, margin_top = 20;
             //заполняем список категорий из excel-файла Products
             foreach (Microsoft.Office.Interop.Excel.Worksheet sh in wbook.Worksheets)

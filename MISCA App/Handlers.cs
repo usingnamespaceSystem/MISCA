@@ -350,6 +350,11 @@ namespace MISCA_App
 
         private void upload_to_inst(object sender, RoutedEventArgs e) { }
 
+        private void orders_grid_AutoGeneratingColumn(object sender, DataGridAutoGeneratingColumnEventArgs e)
+        {
+            e.Column.MaxWidth = 200;
+        }
+
         // при изменении даты необходимо обновлять статистику
         private void date_stat_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
         {
