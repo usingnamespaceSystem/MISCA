@@ -353,21 +353,25 @@ namespace MISCA_App
         private void check_available_click(object sender, RoutedEventArgs e)
         {
             string reply = string.Empty;
-            //int link_column = 3;
-            stock_grid.ItemsSource = StockRowCollection;
+            string fileName = AppDomain.CurrentDomain.BaseDirectory + "Products.xlsx"; ;
+            int art_column = 0;
+            List<string> arts = new List<string>();
 
             for (int i = 1; i <= last_column; i++)
             {
                 string header = wbook.Worksheets[1].Cells[1, i].Text;
-                stock_grid.Columns[i - 1].Header = header;
-                stock_grid.Columns[i - 1].MaxWidth = 200;
+                //stock_grid.Columns[i - 1].MaxWidth = 200;
                 if (header == "Ссылка")
                 {
                     link_column = i;
                 }
+                if (header == "Артикул")
+                {
+                    art_column = i;
+                }
             }
 
-            foreach (CheckBox ch in category_panel.Children)
+            foreach (RadioButton ch in category_panel.Children)
             {
                 Microsoft.Office.Interop.Excel.Worksheet wsheet = wbook.Worksheets[ch.Content];
                 if (ch.IsChecked == true)
@@ -387,49 +391,37 @@ namespace MISCA_App
                             catch (WebException ex)
                             {
                                 if (ex.Status == WebExceptionStatus.ProtocolError && ex.Response != null)
-                                {
-                                    StockRowCollection.Add(new StockRow()
-                                    {
-                                        stock_category = ch.Content.ToString(),
-                                        stock_article = row.Columns[1].Text,
-                                        stock_status = "0",
-                                        stock_name = row.Columns[3].Text,
-                                        stock_link = row.Columns[4].Text,
-                                        stock_seller = row.Columns[5].Text,
-                                        stock_material = row.Columns[6].Text,
-                                        stock_size = row.Columns[7].Text,
-                                        stock_price = row.Columns[8].Text,
-                                        stock_percent = row.Columns[9].Text,
-                                        stock_shipping = row.Columns[10].Text,
-                                        stock_summary = row.Columns[11].Text
-                                    });
-                                    continue;
-                                }
+                                    arts.Add(row.Columns[art_column].Text);
                             }
                         }
 
                         if (reply.Contains("此宝贝已下架") || reply.Contains("此商品已下架") || reply.Contains("您查看的宝贝不存在"))
                         {
-                            StockRowCollection.Add(new StockRow()
-                            {
-                                stock_category = ch.Content.ToString(),
-                                stock_article = row.Columns[1].Text,
-                                stock_status = "0",
-                                stock_name = row.Columns[3].Text,
-                                stock_link = row.Columns[4].Text,
-                                stock_seller = row.Columns[5].Text,
-                                stock_material = row.Columns[6].Text,
-                                stock_size = row.Columns[7].Text,
-                                stock_price = row.Columns[8].Text,
-                                stock_percent = row.Columns[9].Text,
-                                stock_shipping = row.Columns[10].Text,
-                                stock_summary = row.Columns[11].Text
-                            });
+                            arts.Add(row.Columns[art_column].Text);
                             reply = string.Empty;
                         }
                     }
                 }
+
+                string connectionString = string.Format("provider=Microsoft.ACE.OLEDB.12.0; data source={0};Extended Properties=Excel 8.0;", fileName);
+                DataSet data = new DataSet();
+                category_for_stock = ch.Content.ToString();
+
+                using (OleDbConnection con = new OleDbConnection(connectionString))
+                {
+                    con.Open();
+                    OleDbCommand cmd = con.CreateCommand();
+                    var dataTable = new DataTable();
+                    cmd.Parameters.AddWithValue("@arts", arts);
+                    string query = string.Format("SELECT * FROM [{0}$] WHERE [Артикул] in (@arts)", ch.Content);
+                    OleDbDataAdapter adapter = new OleDbDataAdapter(query, con);
+                    adapter.Fill(dataTable);
+                    data.Tables.Add(dataTable);
+                }
+                stock_grid.ItemsSource = data.Tables["Table1"].DefaultView;
+                break;
             }
+            
         }
     }
 }
