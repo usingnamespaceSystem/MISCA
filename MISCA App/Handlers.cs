@@ -9,6 +9,8 @@ using System.Collections.Generic;
 using System.Net;
 using System.Text;
 using System.Reflection;
+using System.Data.OleDb;
+using System.Data;
 
 namespace MISCA_App
 {
@@ -273,22 +275,28 @@ namespace MISCA_App
             }
         }
 
-        private void select_all_category(object sender, RoutedEventArgs e)
+        private void grid_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
         {
-            foreach (CheckBox ch in category_panel.Children)
-            {
-                ch.IsChecked = true;
-            }
-        }
+            string fileName = null, sheet = null;
+            string type = (sender as DataGrid).Tag.ToString();
+            DataGrid dg = sender as DataGrid;
+            DataRowView row = (DataRowView)dg.SelectedItems[0];
 
-        private void unselect_all_category(object sender, RoutedEventArgs e)
-        {
-            foreach (CheckBox ch in category_panel.Children)
+            switch (type)
             {
-                ch.IsChecked = false;
+                case "orders":
+                    {
+                        fileName = AppDomain.CurrentDomain.BaseDirectory + "заказы.xlsx";
+                        sheet = "2017";
+                        break;
+                    }
+                case "stock":
+                    {
+                        fileName = AppDomain.CurrentDomain.BaseDirectory + "Products.xlsx";
+                        sheet = category_for_stock;
+                        break;
+                    }
             }
-        }
-
 
             string col = e.Column.Header.ToString();
             string value = ((TextBox)e.EditingElement).Text;
