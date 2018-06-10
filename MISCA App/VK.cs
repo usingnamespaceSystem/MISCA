@@ -27,7 +27,6 @@ namespace MISCA_App
 
             try
             {
-
                 responseImg = Encoding.ASCII.GetString(wc.UploadFile(uploadServer.UploadUrl, AppDomain.CurrentDomain.BaseDirectory + @"\Изображения\main.jpg"));
                 photo = vk.Photo.SaveMarketPhoto(46499802, responseImg);
                 wc.Dispose();

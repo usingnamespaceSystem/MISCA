@@ -5,12 +5,13 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Media;
+using System.Data.OleDb;
+using System.Data;
 
 namespace MISCA_App
 {
     public partial class MainWindow : Window
     {
-
         private void save_Click(object sender, RoutedEventArgs e)
         {
             if (name.Text.Length == 0 || final_price.Text.Length == 0)
@@ -36,11 +37,11 @@ namespace MISCA_App
                     {
                         i++;
                         wc.DownloadFile(cwb.WB.Source, AppDomain.CurrentDomain.BaseDirectory + @"\Изображения\" + i + ".jpg");
-                        wsheet.Cells[rowIdx, img_count+i].Value = cwb.WB.Source.ToString();
+                        wsheet.Cells[rowIdx, img_count + i].Value = cwb.WB.Source.ToString();
                     }
                 }
             }
-            if (i==1)
+            if (i == 1)
             {
                 MessageBox.Show("Выберите изображения");
                 return;
@@ -62,9 +63,9 @@ namespace MISCA_App
             if (isSizeInTable == true)
             {
                 string size_str = string.Empty;
-                for (int i=1; i <= size_table.Columns.Count; i++)
+                for (int i = 1; i <= size_table.Columns.Count; i++)
                 {
-                    for (int j=1; j <= size_table.Items.Count; j++ )
+                    for (int j = 1; j <= size_table.Items.Count; j++)
                     {
                         //ПОлучение значения из ячйки
                         size_str += size_table.Columns[i - 1].Header.ToString() + "-" + (size_table.Columns[i - 1].GetCellContent(size_table.Items[j - 1]) as TextBlock).Text + "см, ";
@@ -73,7 +74,7 @@ namespace MISCA_App
                 }
                 wsheet.Cells[rowIdx, 7].Value = size_str;
             }
-            else 
+            else
                 wsheet.Cells[rowIdx, 7].Value = size.Text;
 
             wsheet.Cells[rowIdx, 8].Value = price.Text;
