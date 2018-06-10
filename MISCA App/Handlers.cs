@@ -289,67 +289,23 @@ namespace MISCA_App
             }
         }
 
-        private void save_available_click(object sender, RoutedEventArgs e)
-        {
-            int frow, status_col = 0,
-                article_col, name_col, 
-                link_col, seller_col, material_col, 
-                size_col, price_col, percent_col, 
-                shipping_col, summary_col = 0;
 
-            Microsoft.Office.Interop.Excel.Worksheet fwsheet = wbook.Worksheets[1];
+            string col = e.Column.Header.ToString();
+            string value = ((TextBox)e.EditingElement).Text;
+            string id = row["Артикул"].ToString();
+            string connectionString = string.Format("provider=Microsoft.Jet.OLEDB.4.0; data source={0};Extended Properties=Excel 8.0;", fileName);
 
-            status_col = find_excel_col(fwsheet, "Статус");
-            article_col = find_excel_col(fwsheet, "Артикул");
-            name_col = find_excel_col(fwsheet, "Наименование");
-            link_col = find_excel_col(fwsheet, "Ссылка");
-            seller_col = find_excel_col(fwsheet, "Производитель");
-            material_col = find_excel_col(fwsheet, "Материал");
-            size_col = find_excel_col(fwsheet, "Размер");
-            price_col = find_excel_col(fwsheet, "Цена (ю)");
-            percent_col = find_excel_col(fwsheet, "Наценка");
-            shipping_col = find_excel_col(fwsheet, "Доставка(р)");
-            summary_col = find_excel_col(fwsheet, "Стоимость(р)");
-
-            if (status_col == 0 || article_col == 0
-                || name_col == 0 || link_col == 0
-                || seller_col == 0 || material_col == 0
-                || size_col == 0 || price_col == 0
-                || percent_col == 0 || shipping_col == 0
-                || summary_col == 0 )
-                return;
-
-            foreach (StockRow row in StockRowCollection)
+            using (OleDbConnection con = new OleDbConnection(connectionString))
             {
-                fwsheet = wbook.Worksheets[row.stock_category];
-                frow = find_excel_row(fwsheet, "Артикул", row.stock_article);
-
-                if (frow == 0)
-                    continue;
-
-                if (row.stock_status == "0")
-                {
-                    fwsheet.Rows[frow].Columns[status_col].Value = "0";
-                    //тут надо еще спрятать товар Вк
-                }
-
-                else if (row.stock_status == "1")
-                {
-                    fwsheet.Rows[frow].Columns[status_col].Value = "1";
-                    fwsheet.Rows[frow].Columns[article_col].Value = row.stock_article;
-                    fwsheet.Rows[frow].Columns[name_col].Value = row.stock_name;
-                    fwsheet.Rows[frow].Columns[link_col].Value = row.stock_link;
-                    fwsheet.Rows[frow].Columns[seller_col].Value = row.stock_seller;
-                    fwsheet.Rows[frow].Columns[material_col].Value = row.stock_material;
-                    fwsheet.Rows[frow].Columns[size_col].Value = row.stock_size;
-                    fwsheet.Rows[frow].Columns[price_col].Value = row.stock_price;
-                    fwsheet.Rows[frow].Columns[percent_col].Value = row.stock_percent;
-                    fwsheet.Rows[frow].Columns[shipping_col].Value = row.stock_shipping;
-                    fwsheet.Rows[frow].Columns[summary_col].Value = row.stock_summary;
-                }
+                con.Open();
+                OleDbCommand cmd = con.CreateCommand();
+                cmd.Parameters.AddWithValue("@val", value);
+                cmd.Parameters.AddWithValue("@art", id);
+                cmd.CommandText = string.Format("UPDATE [{0}$] SET {1}=@val WHERE [Артикул]=@art", sheet, col);
+                cmd.ExecuteNonQuery();
             }
-            wbook.Save();
         }
+
 
         private int find_excel_col(Microsoft.Office.Interop.Excel.Worksheet fwsheet, string fheader)
         {
