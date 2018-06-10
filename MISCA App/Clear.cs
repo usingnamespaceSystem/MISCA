@@ -11,35 +11,35 @@ namespace MISCA_App
     {
         void clear()
         {
-            i = 0;
-            count = 1;
-            rowIdx = 1;
-            img_count = 12;
-            cat_id = 1;
+            _i = 0;
+            _count = 1;
+            _rowIdx = 1;
+            _imgCount = 12;
+            _catId = 1;
 
-            nf.Visible = false;
-            isImgAdded = false;
-            isSizeInTable = false;
+            _nf.Visible = false;
+            _isImgAdded = false;
+            _isSizeInTable = false;
             //isStockPageLoaded = false;
-            isload = true;
+            _isload = true;
 
             img_checking_count.Content = "0";
 
-            imagesHidden = string.Empty;
+            _imagesHidden = string.Empty;
 
-            images.RemoveRange(0, (images.Count != 0) ? images.Count - 1 : 0);
+            _images.RemoveRange(0, (_images.Count != 0) ? _images.Count - 1 : 0);
 
-            images.Clear();
-            album_id.Clear();
+            _images.Clear();
+            _albumId.Clear();
 
-            for (int i=img.Children.Count-1; i>=0;i--)
+            for (int i = img.Children.Count - 1; i >= 0; i--)
                 img.Children.RemoveAt(i);
 
             foreach (TextBox c in FindVisualChildren<TextBox>(this))
                 if (!c.Name.Contains("link") && !c.Name.Contains("ship"))
                     c.Text = "";
 
-            foreach (FileInfo file in dirInfo.GetFiles())
+            foreach (FileInfo file in _dirInfo.GetFiles())
                 file.Delete();
         }
 
@@ -52,7 +52,7 @@ namespace MISCA_App
                     DependencyObject child = VisualTreeHelper.GetChild(depObj, i);
                     if (child != null && child is T)
                     {
-                        yield return (T)child;
+                        yield return (T) child;
                     }
 
                     foreach (T childOfChild in FindVisualChildren<T>(child))
@@ -62,6 +62,5 @@ namespace MISCA_App
                 }
             }
         }
-
     }
 }

@@ -26,5 +26,30 @@ namespace MISCA_App.Properties
                 return defaultInstance;
             }
         }
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string deviceId {
+            get {
+                return ((string)(this["deviceId"]));
+            }
+            set {
+                this["deviceId"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string guid {
+            get {
+                return ((string)(this["guid"]));
+            }
+            set {
+                this["guid"] = value;
+            }
+        }
+
     }
+
 }

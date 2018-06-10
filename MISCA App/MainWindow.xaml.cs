@@ -26,7 +26,7 @@ namespace MISCA_App
 
             //int ch_top = 0, ch_left= 0, margin_top = 20;
             //заполняем список категорий из excel-файла Products
-            foreach (Microsoft.Office.Interop.Excel.Worksheet sh in wbook.Worksheets)
+            foreach (Microsoft.Office.Interop.Excel.Worksheet sh in _wbook.Worksheets)
             {
                 if (!sh.Name.Contains("nul"))
                 {
@@ -41,7 +41,7 @@ namespace MISCA_App
             }
 
             //заполняем список посредников из excel-файла Agents
-            Microsoft.Office.Interop.Excel.Worksheet wsheet_agents = wbook_agents.Worksheets[1];
+            Microsoft.Office.Interop.Excel.Worksheet wsheet_agents = _wbookAgents.Worksheets[1];
             foreach (Microsoft.Office.Interop.Excel.Range row in wsheet_agents.UsedRange.Rows)
             {
                 if (row.Row == 1)
@@ -50,10 +50,10 @@ namespace MISCA_App
                 agent.Items.Add(row.Columns[1].Text);
                 if (row.Columns[6].Text == "да")
                 {
-                    agent_row = row;
+                    _agentRow = row;
                 }
             }
-            agent.SelectedItem = agent_row.Columns[1].Text;
+            agent.SelectedItem = _agentRow.Columns[1].Text;
         }
         //для редактирования строк в гриде размеров
         public class SizeRow

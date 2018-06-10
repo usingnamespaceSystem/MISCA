@@ -14,53 +14,57 @@ namespace MISCA_App
     {
         private void save_Click(object sender, RoutedEventArgs e)
         {
+            _wsheet = _wbook.Sheets[category.SelectionBoxItem.ToString()];
+
+            while (_wsheet.Cells[_rowIdx, 1].Value != null)
+                _rowIdx++;
+
             if (name.Text.Length == 0 || final_price.Text.Length == 0)
                 MessageBox.Show("Введите имя и цену");
 
             WebClient wc = new WebClient();
-            wsheet = wbook.Sheets[category.SelectionBoxItem.ToString()];
 
-            while (wsheet.Cells[rowIdx, 1].Value != null)
-                rowIdx++;
-
-            foreach (CheckingWB cwb in images)
+            foreach (CheckingWB cwb in _images)
             {
                 if (cwb.checkBox.IsChecked.Value)
                 {
                     if (cwb.main.IsChecked == true)
                     {
-                        wc.DownloadFile(cwb.WB.Source, AppDomain.CurrentDomain.BaseDirectory + @"\Изображения\main.jpg");
-                        wsheet.Cells[rowIdx, 12].Value = cwb.WB.Source.ToString();
-                        ismain = true;
+                        wc.DownloadFile(cwb.WB.Source,
+                            $@"{AppDomain.CurrentDomain.BaseDirectory}\Изображения\main.jpg");
+                        _wsheet.Cells[_rowIdx, 12].Value = cwb.WB.Source.ToString();
+                        _ismain = true;
                     }
                     else
                     {
-                        i++;
-                        wc.DownloadFile(cwb.WB.Source, AppDomain.CurrentDomain.BaseDirectory + @"\Изображения\" + i + ".jpg");
-                        wsheet.Cells[rowIdx, img_count + i].Value = cwb.WB.Source.ToString();
+                        _i++;
+                        wc.DownloadFile(cwb.WB.Source,
+                            $@"{AppDomain.CurrentDomain.BaseDirectory}\Изображения\{_i}.jpg");
+                        _wsheet.Cells[_rowIdx, _imgCount + _i].Value = cwb.WB.Source.ToString();
                     }
                 }
             }
-            if (i == 1)
+
+            if (_i == 1)
             {
                 MessageBox.Show("Выберите изображения");
                 return;
             }
 
-            if (!ismain)
+            if (!_ismain)
             {
                 MessageBox.Show("Выберите главное изображение");
                 return;
             }
 
-            wsheet.Cells[rowIdx, 1].Value = Convert.ToInt32(wsheet.Cells[rowIdx - 1, 1].Value) + 1;
-            wsheet.Cells[rowIdx, 2].Value = 1;
-            wsheet.Cells[rowIdx, 3].Value = link.Text;
-            wsheet.Cells[rowIdx, 4].Value = name.Text;
-            wsheet.Cells[rowIdx, 5].Value = prod.Text;
-            wsheet.Cells[rowIdx, 6].Value = material.Text;
+            _wsheet.Cells[_rowIdx, 1].Value = Convert.ToInt32(_wsheet.Cells[_rowIdx - 1, 1].Value) + 1;
+            _wsheet.Cells[_rowIdx, 2].Value = 1;
+            _wsheet.Cells[_rowIdx, 3].Value = link.Text;
+            _wsheet.Cells[_rowIdx, 4].Value = name.Text;
+            _wsheet.Cells[_rowIdx, 5].Value = prod.Text;
+            _wsheet.Cells[_rowIdx, 6].Value = material.Text;
 
-            if (isSizeInTable == true)
+            if (_isSizeInTable == true)
             {
                 string size_str = string.Empty;
                 for (int i = 1; i <= size_table.Columns.Count; i++)
@@ -68,74 +72,30 @@ namespace MISCA_App
                     for (int j = 1; j <= size_table.Items.Count; j++)
                     {
                         //ПОлучение значения из ячйки
-                        size_str += size_table.Columns[i - 1].Header.ToString() + "-" + (size_table.Columns[i - 1].GetCellContent(size_table.Items[j - 1]) as TextBlock).Text + "см, ";
+                        size_str +=
+                            $"{size_table.Columns[i - 1].Header}-{(size_table.Columns[i - 1].GetCellContent(size_table.Items[j - 1]) as TextBlock)?.Text}см, ";
                     }
-                    size_str = size_str.Remove(size_str.Length - 1, 1) + '\n';
+
+                    size_str = $"{size_str.Remove(size_str.Length - 1, 1)}\n";
                 }
-                wsheet.Cells[rowIdx, 7].Value = size_str;
+
+                _wsheet.Cells[_rowIdx, 7].Value = size_str;
             }
             else
-                wsheet.Cells[rowIdx, 7].Value = size.Text;
+                _wsheet.Cells[_rowIdx, 7].Value = size.Text;
 
-            wsheet.Cells[rowIdx, 8].Value = price.Text;
-            wsheet.Cells[rowIdx, 9].Value = perc.Text;
-            wsheet.Cells[rowIdx, 10].Value = ship.Content;
-            wsheet.Cells[1, 18].Value = cny;
-            wbook.Save();
+            _wsheet.Cells[_rowIdx, 8].Value = price.Text;
+            _wsheet.Cells[_rowIdx, 9].Value = perc.Text;
+            _wsheet.Cells[_rowIdx, 10].Value = ship.Content;
+            _wsheet.Cells[1, 18].Value = _cny;
+            _wbook.Save();
             addGoods();
             link.Focus();
         }
+
         //catch (System.Runtime.InteropServices.COMException)
         //{
         //    MessageBox.Show("Произошла ошибка");
         //}
-        static DataSet Parse(string fileName)
-        {
-            string connectionString = string.Format("provider=Microsoft.ACE.OLEDB.12.0; data source={0};Extended Properties=Excel 8.0;", fileName);
-
-            DataSet data = new DataSet();
-
-            foreach (var sheetName in GetExcelSheetNames(connectionString))
-            {
-                using (OleDbConnection con = new OleDbConnection(connectionString))
-                {
-                    var dataTable = new DataTable();
-                    string query = string.Format("SELECT * FROM [{0}]", sheetName);
-                    con.Open();
-                    OleDbDataAdapter adapter = new OleDbDataAdapter(query, con);
-                    adapter.Fill(dataTable);
-                    data.Tables.Add(dataTable);
-                }
-            }
-
-            return data;
-        }
-
-        static string[] GetExcelSheetNames(string connectionString)
-        {
-            OleDbConnection con = null;
-            DataTable dt = null;
-            con = new OleDbConnection(connectionString);
-            con.Open();
-            dt = con.GetOleDbSchemaTable(OleDbSchemaGuid.Tables, null);
-
-            if (dt == null)
-            {
-                return null;
-            }
-
-            String[] excelSheetNames = new String[dt.Rows.Count];
-            int i = 0;
-
-            foreach (DataRow row in dt.Rows)
-            {
-                excelSheetNames[i] = row["TABLE_NAME"].ToString();
-                i++;
-            }
-
-            return excelSheetNames;
-        }
     }
-
 }
-

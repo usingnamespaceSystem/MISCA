@@ -29,6 +29,7 @@ namespace MISCA_App
                                     }
                                 }
                             }
+
                             break;
                     }
                 }
@@ -36,8 +37,8 @@ namespace MISCA_App
                 XmlDocument cnyXmlDocument = new XmlDocument();
                 cnyXmlDocument.LoadXml(CNYXml);
                 XmlNode xmlNode = cnyXmlDocument.SelectSingleNode("Valute/Value");
-                cny = Convert.ToDouble(xmlNode.InnerText) / 10.0;
-                status.Content = "Курс: " + cny.ToString();
+                _cny = Convert.ToDouble(xmlNode.InnerText) / 10.0;
+                status.Content = "Курс: " + _cny.ToString();
             }
         }
     }

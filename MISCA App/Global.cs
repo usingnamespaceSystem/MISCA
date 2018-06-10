@@ -11,40 +11,56 @@ namespace MISCA_App
 {
     public partial class MainWindow : Window
     {
+        private static readonly IniFile Config = new IniFile();
+
         [DllImport("Kernel32")]
         public static extern void AllocConsole();
 
         [DllImport("Kernel32")]
         public static extern void FreeConsole();
 
-        VkApi vk = new VkApi();
-        long[] extraPhotos = new long[4];
-        List<long> album_id = new List<long>();
-        List<string> list_of_categories = new List<string>();
-        List<CheckingWB> images = new List<CheckingWB>();
-        string[] key_words = new string[10];
+        private readonly VkApi _vk = new VkApi();
+        private readonly long[] _extraPhotos = new long[4];
+        private readonly List<long> _albumId = new List<long>();
+        private readonly List<CheckingWB> _images = new List<CheckingWB>();
+        private string[] _keyWords = new string[10];
 
-        double cny;
-        string imagesHidden = string.Empty;
-        bool isload = true, ismain = false, isImgAdded = false, isSizeInTable = false;
-        int i = 0, rowIdx = 1, count = 1, img_count=12, link_column = 0, last_column = 11;
-        string content = string.Empty, category_for_stock = null;
-        int cat_id = 1;
+        private double _cny;
+        private string _imagesHidden = string.Empty;
 
-        NotifyIcon nf = new NotifyIcon();
-        static Microsoft.Office.Interop.Excel.Application app = new Microsoft.Office.Interop.Excel.Application();
-        Microsoft.Office.Interop.Excel.Workbook wbook = app.Workbooks.Open(AppDomain.CurrentDomain.BaseDirectory + "Products.xlsx");
-        Microsoft.Office.Interop.Excel.Workbook wbook_agents = app.Workbooks.Open(AppDomain.CurrentDomain.BaseDirectory + "Agents.xlsx");
-        Microsoft.Office.Interop.Excel.Worksheet wsheet;
-        Microsoft.Office.Interop.Excel.Range agent_row;
+        private bool _isload = true,
+            _ismain,
+            _isImgAdded,
+            _isSizeInTable;
 
-        DirectoryInfo dirInfo = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory + @"\Изображения\");
+        private int _i = 0,
+            _rowIdx = 1,
+            _count = 1,
+            _imgCount = 12,
+            _linkColumn = 0,
+            LastColumn = 11;
 
-        public delegate void Translation();
-        public delegate void Link();
-        public delegate void Images();
-        public delegate void Loop();
+        private string _content = string.Empty;
+        private int _catId = 1;
 
-        
+        private readonly NotifyIcon _nf = new NotifyIcon();
+        static readonly Microsoft.Office.Interop.Excel.Application App;
+
+        private static readonly string WbookPath = Config.Read("products", "app");
+        private static readonly string WbookAgentsPath = Config.Read("agents", "app");
+        private static readonly string ImagesPath = Config.Read("images", "app");
+
+        private readonly Microsoft.Office.Interop.Excel.Workbook _wbook = App.Workbooks.Open(WbookPath);
+        private readonly Microsoft.Office.Interop.Excel.Workbook _wbookAgents = App.Workbooks.Open(WbookAgentsPath);
+
+        private Microsoft.Office.Interop.Excel.Worksheet _wsheet;
+        private Microsoft.Office.Interop.Excel.Range _agentRow;
+
+        private readonly DirectoryInfo _dirInfo = new DirectoryInfo(ImagesPath);
+
+        static MainWindow()
+        {
+            App = new Microsoft.Office.Interop.Excel.Application();
+        }
     }
 }

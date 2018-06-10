@@ -19,7 +19,7 @@ namespace MISCA_App
             string extra_img;
             ReadOnlyCollection<Photo> id;
 
-            var uploadServer = vk.Photo.GetMarketUploadServer(46499802, true, 49, 89, 700);
+            var uploadServer = _vk.Photo.GetMarketUploadServer(46499802, true, 49, 89, 700);
             var wc = new WebClient();
             ReadOnlyCollection<Photo> photo;
             String responseImg;
@@ -27,8 +27,9 @@ namespace MISCA_App
 
             try
             {
-                responseImg = Encoding.ASCII.GetString(wc.UploadFile(uploadServer.UploadUrl, AppDomain.CurrentDomain.BaseDirectory + @"\Изображения\main.jpg"));
-                photo = vk.Photo.SaveMarketPhoto(46499802, responseImg);
+                responseImg = Encoding.ASCII.GetString(wc.UploadFile(uploadServer.UploadUrl,
+                    AppDomain.CurrentDomain.BaseDirectory + @"\Изображения\main.jpg"));
+                photo = _vk.Photo.SaveMarketPhoto(46499802, responseImg);
                 wc.Dispose();
             }
             catch (Exception e)
@@ -38,18 +39,22 @@ namespace MISCA_App
                 return;
             }
 
-            if (isImgAdded) { i++; }
+            if (_isImgAdded)
+            {
+                _i++;
+            }
 
             try
             {
-                while (count <= i && count < 5)
+                while (_count <= _i && _count < 5)
                 {
                     extra_wc = new WebClient();
-                    extra_img = Encoding.ASCII.GetString(extra_wc.UploadFile(uploadServer.UploadUrl, AppDomain.CurrentDomain.BaseDirectory + @"\Изображения\" + count + ".jpg"));
-                    id = vk.Photo.SaveMarketPhoto(46499802, extra_img);
-                    extraPhotos[count - 1] = id.FirstOrDefault().Id.Value;
+                    extra_img = Encoding.ASCII.GetString(extra_wc.UploadFile(uploadServer.UploadUrl,
+                        AppDomain.CurrentDomain.BaseDirectory + @"\Изображения\" + _count + ".jpg"));
+                    id = _vk.Photo.SaveMarketPhoto(46499802, extra_img);
+                    _extraPhotos[_count - 1] = id.FirstOrDefault().Id.Value;
                     wc.Dispose();
-                    count++;
+                    _count++;
                 }
             }
             catch (Exception e)
@@ -72,23 +77,24 @@ namespace MISCA_App
             }
 
             if (category.SelectionBoxItem.ToString() == "Лофферы" || category.SelectionBoxItem.ToString() == "Ботинки"
-                || category.SelectionBoxItem.ToString() == "Сумки" || category.SelectionBoxItem.ToString() == "Кеды"
-                || category.SelectionBoxItem.ToString() == "Босоножки")
-                cat_id = 4;
+                                                                  || category.SelectionBoxItem.ToString() == "Сумки" ||
+                                                                  category.SelectionBoxItem.ToString() == "Кеды"
+                                                                  || category.SelectionBoxItem.ToString() ==
+                                                                  "Босоножки")
+                _catId = 4;
 
             try
             {
-                add = vk.Markets.Add(new MarketProductParams
+                add = _vk.Markets.Add(new MarketProductParams
                 {
                     OwnerId = -46499802,
-                    CategoryId = cat_id,
+                    CategoryId = _catId,
                     MainPhotoId = photo.FirstOrDefault().Id.Value,
                     Deleted = false,
-                    Name = name.Text + " " + (Convert.ToInt32(wsheet.Cells[rowIdx - 1, 1].Value) + 1).ToString(),
+                    Name = name.Text + " " + (Convert.ToInt32(_wsheet.Cells[_rowIdx - 1, 1].Value) + 1).ToString(),
                     Description = descr,
-                    Price = Convert.ToDecimal(wsheet.Cells[rowIdx, 11].Value),
-                    PhotoIds = extraPhotos
-
+                    Price = Convert.ToDecimal(_wsheet.Cells[_rowIdx, 11].Value),
+                    PhotoIds = _extraPhotos
                 });
             }
             catch (Exception e)
@@ -100,8 +106,8 @@ namespace MISCA_App
 
             try
             {
-                album_id.Add((Convert.ToInt64((wsheet.Cells[2, 3] as Range).Value)));
-                vk.Markets.AddToAlbum(ownerId: -46499802, itemId: add, albumIds: album_id);
+                _albumId.Add((Convert.ToInt64((_wsheet.Cells[2, 3] as Range).Value)));
+                _vk.Markets.AddToAlbum(ownerId: -46499802, itemId: add, albumIds: _albumId);
             }
             catch (Exception e)
             {
@@ -109,28 +115,27 @@ namespace MISCA_App
                 return;
             }
 
-            nf.Visible = true;
-            nf.Icon = new System.Drawing.Icon(AppDomain.CurrentDomain.BaseDirectory + "bowl.ico");
-            nf.ShowBalloonTip(500, @"¯\_(ツ)_ /¯", "Товар успешно добавлен", System.Windows.Forms.ToolTipIcon.Info);
+            _nf.Visible = true;
+            _nf.Icon = new System.Drawing.Icon(AppDomain.CurrentDomain.BaseDirectory + "bowl.ico");
+            _nf.ShowBalloonTip(500, @"¯\_(ツ)_ /¯", "Товар успешно добавлен", System.Windows.Forms.ToolTipIcon.Info);
             uploadServer = null;
             responseImg = null;
             photo = null;
             extra_img = null;
             id = null;
-            for (int i1 = 0; i1 < extraPhotos.Length - 1; i1++)
-                extraPhotos[i1] = 0;
+            for (int i1 = 0; i1 < _extraPhotos.Length - 1; i1++)
+                _extraPhotos[i1] = 0;
         }
 
         private void unexpected_err()
         {
-            Range rg = (Range)wsheet.Rows[rowIdx, Type.Missing];
+            Range rg = (Range) _wsheet.Rows[_rowIdx, Type.Missing];
             rg.Delete(XlDeleteShiftDirection.xlShiftUp);
-            i = 0;
-            foreach (FileInfo file in dirInfo.GetFiles())
+            _i = 0;
+            foreach (FileInfo file in _dirInfo.GetFiles())
             {
                 file.Delete();
             }
         }
     }
 }
-
