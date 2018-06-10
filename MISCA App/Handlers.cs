@@ -350,6 +350,55 @@ namespace MISCA_App
 
         private void upload_to_inst(object sender, RoutedEventArgs e) { }
 
+        // при изменении даты необходимо обновлять статистику
+        private void date_stat_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (date_start.SelectedDate == null || date_end.SelectedDate == null)
+                return;
+
+            string fileName = AppDomain.CurrentDomain.BaseDirectory + "заказы.xlsx"; ;
+            string connectionString = string.Format("provider=Microsoft.ACE.OLEDB.12.0; data source={0};Extended Properties=Excel 8.0;", fileName);
+            DataSet data = new DataSet();
+
+            using (OleDbConnection con = new OleDbConnection(connectionString))
+            {
+                con.Open();
+                OleDbCommand cmd = con.CreateCommand();
+                var stat_regions = new DataTable();
+                var dataTable = new DataTable();
+                float sum = 0, count = 0;
+
+                cmd.Parameters.AddWithValue("@start", date_start.SelectedDate.Value);
+                cmd.Parameters.AddWithValue("@end", date_end.SelectedDate.Value);
+
+                //string query_region = "SELECT [Регион], COUNT([Регион]) as [Количество заказов] FROM [2017$] WHERE [Дата] >= \'@start\' AND [Дата] <= \'@end\' GROUP BY [Регион]";
+                string query_region = "SELECT [Регион], COUNT([Регион]) as [Количество заказов] FROM [2017$] WHERE [Регион] IS NOT NULL GROUP BY [Регион] ORDER BY COUNT([Регион]) DESC";
+                OleDbDataAdapter adapter_region = new OleDbDataAdapter(query_region, con);
+                adapter_region.Fill(stat_regions);
+                data.Tables.Add(stat_regions);
+
+                OleDbCommand cmd2 = new OleDbCommand("SELECT Sum([Прибыль]) FROM [2017$]", con);
+                OleDbDataReader reader = cmd2.ExecuteReader();
+                while (reader.Read())
+                    stat_income.Content = reader[0].ToString();
+
+                cmd2 = new OleDbCommand("SELECT [Стоимость] FROM [2017$] WHERE [№] IS NOT NULL", con);
+                reader = cmd2.ExecuteReader();
+                while (reader.Read())
+                {
+                    try
+                    {
+                        sum += (float) Convert.ToDecimal(reader[0]);
+                        count++;
+                    }
+                    catch
+                    { continue; }
+                }
+                stat_summ.Content = (sum/count).ToString();
+            }
+            region_grid.ItemsSource = data.Tables["Table1"].DefaultView;
+        }
+
         private void check_available_click(object sender, RoutedEventArgs e)
         {
             string reply = string.Empty;
