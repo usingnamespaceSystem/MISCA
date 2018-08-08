@@ -9,7 +9,7 @@ namespace MISCA_App
 {
     public class InstargamUpload
     {
-        private void UploadImage(string username, string password, string imagePath, string caption)
+        public static void UploadImage(string username, string password, string imagePath, string caption)
         {
             var uploader = new InstagramUploader(username, ConvertToSecureString(password));
             uploader.InvalidLoginEvent += InvalidLoginEvent;
@@ -20,7 +20,7 @@ namespace MISCA_App
             uploader.OnMediaConfigureStarted += OnMediaConfigureStarted;
             uploader.OnMediaUploadStartedEvent += OnMediaUploadStartedEvent;
             uploader.OnMediaUploadeComplete += OnmediaUploadCompleteEvent;
-            uploader.UploadImage(imagePath, caption);
+            uploader.UploadImage(imagePath, caption, true);
         }
 
         private static SecureString ConvertToSecureString(string strPassword)

@@ -3,11 +3,10 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:local="clr-namespace:MISCA_App"
-    xmlns:awe="http://schemas.awesomium.com/winfx" x:Class="MISCA_App.MainWindow"
-    mc:Ignorable="d"
-    Title="MISCA APP" Height="1100" Width="1600" Closing="Window_Closing" Loaded="Window_Loaded" Icon="bowl.ico"
-    Background="#f8f7f7">
+    xmlns:awe="http://schemas.awesomium.com/winfx"
+    x:Class="MISCA_App.MainWindow" mc:Ignorable="d"
+    Title="MISCA APP" Height="1000" Width="1600" Closing="Window_Closing" Loaded="Window_Loaded" Icon="bowl.ico"
+    Background="#f8f7f7" BorderThickness="0">
     <Window.Resources>
         <Style TargetType="Button">
             <Setter Property="FontFamily" Value="Verdana" />
@@ -21,7 +20,7 @@
             <Setter Property="FontFamily" Value="Verdana" />
             <Setter Property="FontSize" Value="14" />
             <Setter Property="Foreground" Value="White" />
-            <Setter Property="Padding" Value="10 10" />
+            <Setter Property="Padding" Value="10 10 10 10" />
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type TabItem}">
@@ -29,12 +28,12 @@
                             <Grid>
                                 <Grid>
                                     <Border x:Name="border"
-                                            CornerRadius="3,3,0,0"
+                                            CornerRadius="5,5,0,0"
                                             Background="#fbe0dd" />
                                 </Grid>
                                 <ContentPresenter ContentSource="Header"
-                                                  HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                                  VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                                                  HorizontalAlignment="Center"
+                                                  VerticalAlignment="Center" />
                             </Grid>
                         </Border>
                         <ControlTemplate.Triggers>
@@ -171,7 +170,7 @@
                     <WrapPanel HorizontalAlignment="Left" Grid.Column="2" Margin="0">
                         <TextBox x:Name="link" Height="26" Margin="5,5" TextWrapping="NoWrap" Width="191" />
                         <Button x:Name="fusropars" Content="Искать" Click="fusropars_Click" Height="26"
-                                VerticalAlignment="Top" Width="73" Margin="5,5" />
+                                VerticalAlignment="Top" Width="71" Margin="5,5" />
                         <ComboBox x:Name="category" DropDownClosed="category_DropDownClosed" Width="276" Height="26"
                                   Margin="5,5" />
                         <TextBox x:Name="name" Height="26" TextWrapping="Wrap" Width="274" Margin="5,5" />
@@ -210,10 +209,10 @@
                     </StackPanel>
 
                     <WrapPanel Grid.Column="4" HorizontalAlignment="Left">
-                        <TextBox x:Name="material" Height="26" TextWrapping="Wrap" Width="280" Margin="5" />
+                        <TextBox x:Name="material" Height="26" TextWrapping="Wrap" Width="275" Margin="5" />
                         <TextBox x:Name="size" Height="48" TextWrapping="Wrap" Width="163" Margin="5" />
                         <Button x:Name="parse_size" Content="Применить" Click="parse_size_Click" Height="26"
-                                VerticalAlignment="Top" Width="100" Margin="5" RenderTransformOrigin="0.5,0.5">
+                                VerticalAlignment="Top" Width="99" Margin="5" RenderTransformOrigin="0.5,0.5">
                             <Button.RenderTransform>
                                 <TransformGroup>
                                     <ScaleTransform />
@@ -225,7 +224,7 @@
                         </Button>
                         <TextBox x:Name="weight" HorizontalAlignment="Center" VerticalAlignment="Center"
                                  TextChanged="change_weight" Width="86" Height="26" Margin="5" />
-                        <TextBlock Text="&#xA;" Width="166" Height="26" Margin="5" />
+                        <TextBlock Text="&#xA;" Width="160" Height="26" Margin="5" />
                         <TextBox x:Name="price" Height="26" TextWrapping="Wrap" Width="46" TextChanged="change_price"
                                  KeyDown="price_KeyDown" Margin="5,5,0,5" />
                         <Label x:Name="label3_Copy" Content="+" HorizontalAlignment="Center" VerticalAlignment="Center"
@@ -234,14 +233,14 @@
                                  KeyDown="price_KeyDown" Margin="0,5" />
                         <Label x:Name="label3_Copy1" Content="%  +" HorizontalAlignment="Center"
                                VerticalAlignment="Center" Width="46" Margin="0,5" />
-                        <Label x:Name="ship" Content="0" Height="26" Width="47" Margin="0,5" />
+                        <Label x:Name="ship" Content="0" Height="26" Width="42" Margin="0,5" />
                         <Label x:Name="label3_Copy2" Content="=" HorizontalAlignment="Center"
                                VerticalAlignment="Center" Width="19" Height="26" Margin="0,5" />
                         <TextBox x:Name="final_price" Height="26" TextWrapping="Wrap" Width="57"
                                  KeyDown="price_KeyDown" Margin="5" />
                         <Label x:Name="income" Content="0" HorizontalAlignment="Center" VerticalAlignment="Center"
                                Width="106" Height="26" Margin="5" />
-                        <CheckBox Content="Загрузить в Инстаграм" Checked="upload_to_inst" Height="26"
+                        <CheckBox x:Name="inst_checkbox" Content="Загрузить в Инстаграм" Checked="upload_to_inst" Height="26"
                                   VerticalAlignment="Bottom" Margin="5,5,5,0" />
                         <Button x:Name="save" x:Uid="sa" Content="Сохранить товар" Height="26" VerticalAlignment="Top"
                                 Width="151" Margin="5,0,5,5" Click="save_Click" HorizontalAlignment="Right" />
@@ -262,12 +261,12 @@
                             </DataGrid.Columns>
                         </DataGrid>
                     </WrapPanel>
-                    <awe:WebControl x:Name="WebControl" Margin="5,259,46,52" LoadingFrame="WebControl_LoadingFrame"
+                    <awe:WebControl x:Name="WebControl" Margin="10,273,46,52" LoadingFrame="WebControl_LoadingFrame"
                                     LoadingFrameComplete="WebControl_LoadingFrameComplete"
                                     ScrollViewer.HorizontalScrollBarVisibility="Visible" Grid.ColumnSpan="5"
-                                    Grid.Column="1" Height="650" />
-                    <Label x:Name="status" Content="" Margin="0,0,10,4" Height="32" VerticalAlignment="Bottom"
-                           HorizontalAlignment="Right" Width="131" Grid.Column="3" />
+                                    Grid.Column="1" />
+                    <Label x:Name="status" Content="" Margin="0,0,46,8" Height="32" VerticalAlignment="Bottom"
+                           HorizontalAlignment="Right" Width="Auto" Grid.Column="5" />
                     <Label x:Name="img_checking_count" Content="0" HorizontalAlignment="Left" Width="30"
                            Margin="1,0,0,14" Panel.ZIndex="100" Height="26" VerticalAlignment="Bottom" Grid.Column="1" />
                     <awe:WebControl x:Name="WebControl_promo" Margin="103,782,43,52" Grid.Column="3" />
@@ -280,13 +279,13 @@
                         <ColumnDefinition Width="Auto" MinWidth="1269" />
                     </Grid.ColumnDefinitions>
                     <StackPanel x:Name="stack_panel2" Grid.Column="0">
-                        <TextBlock Margin="20,30,20,10" Text="Выберите товарные категории для проверки" TextWrapping="WrapWithOverflow"
-                                   Grid.Column="0" HorizontalAlignment="Left" Width="261" Height="38" VerticalAlignment="Top" Grid.ColumnSpan="3"/>
+                        <TextBlock Margin="20,30,36,10" Text="Выберите товарные категории для проверки" TextWrapping="WrapWithOverflow"
+                                   Grid.Column="0" Height="38" VerticalAlignment="Top" Grid.ColumnSpan="3"/>
                         <StackPanel x:Name="category_panel" Grid.Column="0" Margin="10">
                         </StackPanel>
-                        <Button x:Name="check_available" Content="Запустить проверку" Click="check_available_click" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Top" Width="191" Height="26" Grid.ColumnSpan="3" Margin="10"/>
-                        <Button x:Name="save_available" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Top" Width="191" Height="45" Grid.ColumnSpan="2" Margin="63,10" IsCancel="True">
-                            <TextBlock Text ="Снять с продажи товары, выбывшие из наличия" TextWrapping="Wrap" TextAlignment="Center"/>
+                        <Button x:Name="check_available" Content="Запустить проверку" Click="check_available_click" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Top" Width="200" Height="26" Grid.ColumnSpan="3" Margin="0,10"/>
+                        <Button x:Name="save_available" Grid.Column="2" HorizontalAlignment="Center" Click="save_available_Click" VerticalAlignment="Top" Width="200" Height="45" Grid.ColumnSpan="2" Margin="0,10" IsCancel="True">
+                            <TextBlock Text ="Сохранить данные о товарах" TextWrapping="Wrap" TextAlignment="Center" Width="200" />
                         </Button>
                         <TextBox x:Name="link_stock" Grid.Column="4" Margin="4,500,960,499"/>
                     </StackPanel>
@@ -295,38 +294,64 @@
                 </Grid>
             </TabItem>
             <TabItem Header="Загрузка в Инстаграм" Height="30" Padding="10,0,10,0" Width="200">
+                <Grid Name="inst_grid" Margin="20">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="0.2*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <!--<Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>-->
+                    <StackPanel Grid.Column="0" Grid.Row="0" Margin="0,0,20,20">
+                        <TextBlock Margin="20,0" Text="Товарные категории:" TextWrapping="WrapWithOverflow" HorizontalAlignment="Center"/>
+                        <StackPanel x:Name="category_inst_panel" Margin="10">
+                        </StackPanel>
+                        <awe:WebControl x:Name="WebControl_inst" Height="200" Width="200"/>
+                        <TextBox Name="inst_caption" Margin="10" Height="91"/>
+                        <Button Click="inst_Click" Content="Загрузить в Инстаграм" Height="30" Margin="10,0" />
+                    </StackPanel>
+                    <DataGrid x:Name="product_grid" Grid.Column="2" SelectedCellsChanged="inst_SelectedCellsChanged" AutoGeneratingColumn="orders_grid_AutoGeneratingColumn">
+                    </DataGrid>
+                </Grid>
             </TabItem>
             <TabItem Header="Заказы" Height="30" Padding="10,0,10,0" Width="200">
                 <DataGrid x:Name="orders_grid" Grid.Column="2" CellEditEnding="grid_CellEditEnding" Tag="orders" AutoGeneratingColumn="orders_grid_AutoGeneratingColumn">
                 </DataGrid>
             </TabItem>
             <TabItem Header="Статистика" Height="30" Padding="10,0,10,0" Width="200">
-                <Grid Name="stats_grid" Width="400" HorizontalAlignment="Center" Margin="20">
+                <Grid Name="stats_grid" Margin="10">
                     <Grid.ColumnDefinitions>
-                        <!--<ColumnDefinition Width="0.1*"/>
-                        <ColumnDefinition Width="0.1*"/>-->
+                        <ColumnDefinition Width="0.4*"/>
+                        <ColumnDefinition Width="0.4*"/>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
-                    <StackPanel Grid.Column="0" Grid.Row="0">
+                    <StackPanel Grid.Column="0">
                         <Label Content="Начало периода"/>
                         <Label Content="Конец периода"/>
                         <Label Content="Средняя сумма заказа"/>
+                        <Label Content="Средний срок доставки"/>
+                        <Label Content="Заказов через Вконтакте"/>
+                        <Label Content="Заказов через Инстаграм"/>
                         <Label Content="Прибыль"/>
                     </StackPanel>
-                    <StackPanel Grid.Column="1" Grid.Row="0">
+                    <StackPanel Grid.Column="1">
                         <DatePicker Name="date_start" SelectedDateFormat="Short" SelectedDateChanged="date_stat_SelectedDateChanged"/>
                         <DatePicker Name="date_end" SelectedDateFormat="Short"  SelectedDateChanged="date_stat_SelectedDateChanged"/>
                         <Label Name="stat_summ" Height="27"/>
+                        <Label Name="stat_shipp" Height="27"/>
+                        <Label Name="stat_vk" Height="27"/>
+                        <Label Name="stat_inst" Height="27"/>
                         <Label Name="stat_income" Height="27"/>
                     </StackPanel>
-                    <StackPanel Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1">
-                        <Label Content="Рейтинг регионов" Margin="0,20,0,0" HorizontalAlignment="Center"/>
-                        <DataGrid x:Name="region_grid" Margin="0,10,0,0" HorizontalAlignment="Center" Width="Auto" MinWidth="300"/>
+                    <StackPanel Grid.Column="2">
+                        <Label Content="Рейтинг регионов" HorizontalAlignment="Center"/>
+                        <DataGrid x:Name="region_grid" Margin="0,10,0,0" HorizontalAlignment="Center" Width="400"/>
+                    </StackPanel>
+                    <StackPanel Grid.Column="3">
+                        <Label Content="Рейтинг товырных категорий" HorizontalAlignment="Center"/>
+                        <DataGrid x:Name="cat_grid" Margin="0,10,0,0" HorizontalAlignment="Center" Width="400"/>
                     </StackPanel>
                 </Grid>
             </TabItem>

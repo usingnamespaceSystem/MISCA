@@ -17,10 +17,11 @@ namespace MISCA_App
         public MainWindow()
         {
             InitializeComponent();
-            string fileName = AppDomain.CurrentDomain.BaseDirectory + "заказы.xlsx";
-            string connectionString = string.Format("provider=Microsoft.ACE.OLEDB.12.0; data source={0};Extended Properties=Excel 8.0;", fileName);
-            DataSet ds = Parse(fileName);
-            orders_grid.ItemsSource = Parse(AppDomain.CurrentDomain.BaseDirectory + "заказы.xlsx").Tables["Table1"].DefaultView;
+            string connectionString = string.Format("provider=Microsoft.ACE.OLEDB.12.0; data source={0};Extended Properties=Excel 8.0;", order_file);
+            orders_grid.ItemsSource = Parse(order_file).Tables["Table1"].DefaultView;
+
+            connectionString = string.Format("provider=Microsoft.ACE.OLEDB.12.0; data source={0};Extended Properties=Excel 8.0;", product_file);
+            product_grid.ItemsSource = Parse(product_file).Tables["Table1"].DefaultView;
             //foreach (DataGridColumn col in orders_grid.Columns)
             //    col.MaxWidth = new DataGridLenght(200);
 
@@ -31,12 +32,17 @@ namespace MISCA_App
                 if (!sh.Name.Contains("nul"))
                 {
                     category.Items.Add(sh.Name);
+
                     RadioButton cat_select = new RadioButton();
                     cat_select.GroupName = "category_for_check_stock";
-                    //cat_check.Margin = new Thickness(ch_left, ch_top, 0, 0);
                     cat_select.Content = (string)sh.Name;
                     category_panel.Children.Add(cat_select);
-                    //ch_top += margin_top;
+
+                    RadioButton cat_inst_select = new RadioButton();
+                    cat_inst_select.GroupName = "category_for_inst";
+                    cat_inst_select.Content = (string)sh.Name;
+                    cat_inst_select.Checked += inst_CatChanged;
+                    category_inst_panel.Children.Add(cat_inst_select);
                 }
             }
 
@@ -48,7 +54,7 @@ namespace MISCA_App
                     continue;
 
                 agent.Items.Add(row.Columns[1].Text);
-                if (row.Columns[6].Text == "да")
+                if (row.Columns[7].Text == "да")
                 {
                     _agentRow = row;
                 }
@@ -75,5 +81,31 @@ namespace MISCA_App
             }
         }
 
+        ////для редактирования строк в гриде наличия
+        //public class StockRow
+        //{
+        //    public string stock_category { get; set; }
+        //    public string stock_article { get; set; }
+        //    public string stock_status { get; set; }
+        //    public string stock_name { get; set; }
+        //    public string stock_link { get; set; }
+        //    public string stock_seller { get; set; }
+        //    public string stock_material { get; set; }
+        //    public string stock_size { get; set; }
+        //    public string stock_price { get; set; }
+        //    public string stock_percent { get; set; }
+        //    public string stock_shipping { get; set; }
+        //    public string stock_summary { get; set; }
+        //}
+        //private ObservableCollection<StockRow> _stock_rows;
+        //public ObservableCollection<StockRow> StockRowCollection
+        //{
+        //    get
+        //    {
+        //        if (_stock_rows == null)
+        //            _stock_rows = new ObservableCollection<StockRow>();
+        //        return _stock_rows;
+        //    }
+        //}
     }
 }

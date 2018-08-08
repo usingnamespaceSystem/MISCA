@@ -165,23 +165,17 @@ namespace MISCA_App
         private void parse_size_Click(object sender, RoutedEventArgs e)
         {
             size_table.ItemsSource = SizeRowCollection;
-            var parameters = new List<string>();
+            List<string> parameters = new List<string>();
             parameters.AddRange(size.Text.Split(','));
+            size_table.Columns[0].Header = "Размер";
             for (int i = 1; i <= parameters.Count; i++)
             {
-                size_table.Columns[i - 1].Header = parameters[i - 1];
+                size_table.Columns[i].Header = parameters[i - 1];
             }
-
             //size_table.Items.Add(new ListCollectionView(parameters));
-            var newRow = new SizeRow()
-            {
-                field1 = string.Empty,
-                field2 = string.Empty,
-                field3 = string.Empty,
-                field4 = string.Empty,
-                field5 = string.Empty
-            };
-            SizeRowCollection.Add(newRow);
+            SizeRow new_row = new SizeRow() { field1 = string.Empty, field2 = string.Empty, field3 = string.Empty, field4 = string.Empty, field5 = string.Empty };
+            SizeRowCollection.Add(new_row);
+
             _isSizeInTable = true;
         }
 
@@ -215,21 +209,23 @@ namespace MISCA_App
         private void change_weight(object sender, TextChangedEventArgs e)
         {
             if (weight.Text == String.Empty) return;
-            var agentsComission = 0;
+            double agentsComission = 0.0;
+
             try
             {
                 //комиссия поставщика считается либо за вес, либо единожды за посылку вцелом
-                if (_agentRow.Columns[3].Value)
+                if (_agentRow.Columns[3].Value != "")
                 {
-                    agentsComission = weight.Text * _agentRow.Columns[3].Value;
+                    agentsComission = (double) (Convert.ToDecimal(weight.Text) * Convert.ToDecimal(_agentRow.Columns[3].Value));
                 }
                 else
                 {
-                    agentsComission = weight.Text * _agentRow.Columns[4].Value;
+                    agentsComission = (double) (Convert.ToDecimal(weight.Text) * Convert.ToDecimal(_agentRow.Columns[4].Value));
                 }
 
                 //комиссия поставщика считается либо за вес, либо единожды за посылку вцелом
-                ship.Content = weight.Text * _agentRow.Columns[5].Value + agentsComission;
+                double rus_ship = (double)(Convert.ToDecimal(weight.Text) * Convert.ToDecimal(_agentRow.Columns[6].Value));
+                ship.Content =  ((double)(Convert.ToDecimal(weight.Text) * Convert.ToDecimal(_agentRow.Columns[5].Value)) + agentsComission + rus_ship).ToString();
             }
             catch (Exception ex)
             {
@@ -247,20 +243,22 @@ namespace MISCA_App
                     continue;
                 }
 
-                weight.Text = Convert.ToInt32((sh.Cells[2, 5] as Microsoft.Office.Interop.Excel.Range)?.Value);
-                var agentsComission = 0;
+                weight.Text = sh.Cells[2, 5].Value.ToString();
+                double agentsComission = 0.0;
+
                 //комиссия поставщика считается либо за вес, либо единожды за посылку вцелом
-                if (_agentRow.Columns[3].Value)
+                if (_agentRow.Columns[3].Value != "")
                 {
-                    agentsComission = weight.Text * _agentRow.Columns[3].Value;
+                    agentsComission = (double) (Convert.ToDecimal(weight.Text) * Convert.ToDecimal(_agentRow.Columns[3].Value));
                 }
                 else
                 {
-                    agentsComission = weight.Text * _agentRow.Columns[4].Value;
+                    agentsComission = (double) Convert.ToDecimal(_agentRow.Columns[4].Value);
                 }
 
                 //комиссия поставщика считается либо за вес, либо единожды за посылку вцелом
-                ship.Content = weight.Text * _agentRow.Columns[5].Value + agentsComission;
+                double rus_ship = (double)(Convert.ToDecimal(weight.Text) * Convert.ToDecimal(_agentRow.Columns[6].Value));
+                ship.Content = ((double)(Convert.ToDecimal(weight.Text) * Convert.ToDecimal(_agentRow.Columns[5].Value)) + agentsComission + rus_ship).ToString();
                 return;
             }
         }
@@ -308,14 +306,14 @@ namespace MISCA_App
             {
                 case "orders":
                     {
-                        fileName = AppDomain.CurrentDomain.BaseDirectory + "заказы.xlsx";
-                        sheet = "2017";
+                        fileName = order_file;
+                        sheet = orders_sheet;
                         break;
                     }
                 case "stock":
                     {
-                        fileName = AppDomain.CurrentDomain.BaseDirectory + "Products.xlsx";
-                        sheet = category_for_stock;
+                        fileName = product_file;
+                        sheet = _category_for_stock;
                         break;
                     }
             }
@@ -324,6 +322,9 @@ namespace MISCA_App
             string value = ((TextBox)e.EditingElement).Text;
             string id = row["Артикул"].ToString();
             string connectionString = string.Format("provider=Microsoft.Jet.OLEDB.4.0; data source={0};Extended Properties=Excel 8.0;", fileName);
+
+            if (type == "stock")
+                _arts_edited.Add(id);
 
             using (OleDbConnection con = new OleDbConnection(connectionString))
             {
@@ -377,40 +378,86 @@ namespace MISCA_App
             e.Column.MaxWidth = 200;
         }
 
-        // при изменении даты необходимо обновлять статистику
-        private void date_stat_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
+        private void inst_SelectedCellsChanged(object sender, SelectedCellsChangedEventArgs e)
         {
-            if (date_start.SelectedDate == null || date_end.SelectedDate == null)
-                return;
+            try
+            {
+                DataGrid dg = sender as DataGrid;
+                DataRowView row = (DataRowView)dg.SelectedItems[0];
+                WebControl_inst.Source = new Uri(row["Главн изобр"].ToString());
+                inst_caption.Text = row["Наименование"].ToString() + "\n" + row["Стоимость(р)"].ToString();
+            }
+            catch { }
+        }
 
-            string fileName = AppDomain.CurrentDomain.BaseDirectory + "заказы.xlsx"; ;
-            string connectionString = string.Format("provider=Microsoft.ACE.OLEDB.12.0; data source={0};Extended Properties=Excel 8.0;", fileName);
+        private void inst_CatChanged(object sender, RoutedEventArgs e)
+        {
+            string connectionString = string.Format("provider=Microsoft.ACE.OLEDB.12.0; data source={0};Extended Properties=Excel 8.0;", product_file);
             DataSet data = new DataSet();
 
             using (OleDbConnection con = new OleDbConnection(connectionString))
             {
                 con.Open();
                 OleDbCommand cmd = con.CreateCommand();
-                var stat_regions = new DataTable();
                 var dataTable = new DataTable();
+                string query = string.Format("SELECT * FROM [{0}$]", ((RadioButton)sender).Content.ToString());
+                OleDbDataAdapter adapter = new OleDbDataAdapter(query, con);
+                adapter.Fill(dataTable);
+                data.Tables.Add(dataTable);
+            }
+            product_grid.ItemsSource = data.Tables["Table1"].DefaultView;
+        }
+
+
+        // при изменении даты необходимо обновлять статистику
+        private void date_stat_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (date_start.SelectedDate == null || date_end.SelectedDate == null)
+                return;
+
+            string connectionString = string.Format("provider=Microsoft.ACE.OLEDB.12.0; data source={0};Extended Properties=Excel 8.0;", order_file);
+            DataSet ds_orders = new DataSet();
+            DataSet ds_cats = new DataSet();
+
+            using (OleDbConnection con = new OleDbConnection(connectionString))
+            {
+                con.Open();
+                var stat_regions = new DataTable();
+                var stat_cats = new DataTable();
                 float sum = 0, count = 0;
 
-                cmd.Parameters.AddWithValue("@start", date_start.SelectedDate.Value);
-                cmd.Parameters.AddWithValue("@end", date_end.SelectedDate.Value);
-
+                //cmd.Parameters.AddWithValue("@start", date_start.SelectedDate.Value);
+                //cmd.Parameters.AddWithValue("@end", date_end.SelectedDate.Value);
+  
                 //string query_region = "SELECT [Регион], COUNT([Регион]) as [Количество заказов] FROM [2017$] WHERE [Дата] >= \'@start\' AND [Дата] <= \'@end\' GROUP BY [Регион]";
-                string query_region = "SELECT [Регион], COUNT([Регион]) as [Количество заказов] FROM [2017$] WHERE [Регион] IS NOT NULL GROUP BY [Регион] ORDER BY COUNT([Регион]) DESC";
+                string query_region = String.Format("SELECT [Регион], COUNT([Регион]) as [Количество заказов] FROM [{0}$] WHERE [Регион] IS NOT NULL GROUP BY [Регион] ORDER BY COUNT([Регион]) DESC", orders_sheet);
                 OleDbDataAdapter adapter_region = new OleDbDataAdapter(query_region, con);
                 adapter_region.Fill(stat_regions);
-                data.Tables.Add(stat_regions);
+                ds_orders.Tables.Add(stat_regions);
 
-                OleDbCommand cmd2 = new OleDbCommand("SELECT Sum([Прибыль]) FROM [2017$]", con);
-                OleDbDataReader reader = cmd2.ExecuteReader();
+                string query_category = String.Format("SELECT [Товарная категория], COUNT([Товарная категория]) as [Количество заказов]" +
+                    "FROM [{0}$] WHERE [Товарная категория] IS NOT NULL GROUP BY [Товарная категория] ORDER BY COUNT([Товарная категория]) DESC", orders_sheet);
+                OleDbDataAdapter adapter_category = new OleDbDataAdapter(query_category, con);
+                adapter_category.Fill(stat_cats);
+                ds_cats.Tables.Add(stat_cats);
+
+                OleDbCommand cmd = new OleDbCommand(String.Format("SELECT Sum([Прибыль]) FROM [{0}$]", orders_sheet), con);
+                OleDbDataReader reader = cmd.ExecuteReader();
                 while (reader.Read())
                     stat_income.Content = reader[0].ToString();
 
-                cmd2 = new OleDbCommand("SELECT [Стоимость] FROM [2017$] WHERE [№] IS NOT NULL", con);
-                reader = cmd2.ExecuteReader();
+                cmd = new OleDbCommand(String.Format("SELECT COUNT([Источник]) FROM [{0}$] WHERE [Источник]=\"ВК\" ", orders_sheet), con);
+                reader = cmd.ExecuteReader();
+                while (reader.Read())
+                    stat_vk.Content = reader[0].ToString();
+
+                cmd = new OleDbCommand(String.Format("SELECT COUNT([Источник]) FROM [{0}$] WHERE [Источник]=\"Инстаграм\" ", orders_sheet), con);
+                reader = cmd.ExecuteReader();
+                while (reader.Read())
+                    stat_inst.Content = reader[0].ToString();
+
+                cmd = new OleDbCommand(String.Format("SELECT [Стоимость] FROM [{0}$] WHERE [№] IS NOT NULL", orders_sheet), con);
+                reader = cmd.ExecuteReader();
                 while (reader.Read())
                 {
                     try
@@ -423,11 +470,14 @@ namespace MISCA_App
                 }
                 stat_summ.Content = (sum/count).ToString();
             }
-            region_grid.ItemsSource = data.Tables["Table1"].DefaultView;
+            region_grid.ItemsSource = ds_orders.Tables["Table1"].DefaultView;
+            cat_grid.ItemsSource = ds_cats.Tables["Table1"].DefaultView;
         }
 
         private void check_available_click(object sender, RoutedEventArgs e)
         {
+            _arts_edited.Clear();
+
             string reply = string.Empty;
             string fileName = AppDomain.CurrentDomain.BaseDirectory + "Products.xlsx"; ;
             int art_column = 0;
@@ -480,17 +530,19 @@ namespace MISCA_App
 
                 string connectionString = string.Format("provider=Microsoft.ACE.OLEDB.12.0; data source={0};Extended Properties=Excel 8.0;", fileName);
                 DataSet data = new DataSet();
-                category_for_stock = ch.Content.ToString();
+                _category_for_stock = ch.Content.ToString();
 
                 using (OleDbConnection con = new OleDbConnection(connectionString))
                 {
                     con.Open();
                     OleDbCommand cmd = con.CreateCommand();
                     var dataTable = new DataTable();
-                    cmd.Parameters.AddWithValue("@arts", arts);
-                    string query = string.Format("SELECT * FROM [{0}$] WHERE [Артикул] in (@arts)", ch.Content);
+                    string str = String.Join(", ", arts);
+                    //cmd.Parameters.AddWithValue("@arts", str);
+                    //string query = string.Format("SELECT * FROM [{0}$] WHERE [Артикул] in (@arts)", ch.Content);
+                    string query = string.Format("SELECT * FROM [{0}$] WHERE [Артикул] in ({1})", ch.Content, str);
                     OleDbDataAdapter adapter = new OleDbDataAdapter(query, con);
-                    adapter.Fill(dataTable);
+                     adapter.Fill(dataTable);
                     data.Tables.Add(dataTable);
                 }
                 stock_grid.ItemsSource = data.Tables["Table1"].DefaultView;
@@ -499,14 +551,15 @@ namespace MISCA_App
             
         }
 
-        private void upload_to_inst(object sender, RoutedEventArgs e)
+        private void inst_Click(object sender, RoutedEventArgs e)
         {
-            throw new NotImplementedException();
+            string user = Config.Read("username", "instagram");
+            string pass = Config.Read("password", "instagram");
+            WebClient wc = new WebClient();
+            string img_path = images_file + "\\inst.jpg";
+            wc.DownloadFile(WebControl_inst.Source, img_path);
+            InstargamUpload.UploadImage(user, pass, img_path, inst_caption.Text);
         }
 
-        private void save_available_click(object sender, RoutedEventArgs e)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

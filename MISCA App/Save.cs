@@ -30,16 +30,14 @@ namespace MISCA_App
                 {
                     if (cwb.main.IsChecked == true)
                     {
-                        wc.DownloadFile(cwb.WB.Source,
-                            $@"{AppDomain.CurrentDomain.BaseDirectory}\Изображения\main.jpg");
+                        wc.DownloadFile(cwb.WB.Source, images_file +  $@"\main.jpg");
                         _wsheet.Cells[_rowIdx, 12].Value = cwb.WB.Source.ToString();
                         _ismain = true;
                     }
                     else
                     {
                         _i++;
-                        wc.DownloadFile(cwb.WB.Source,
-                            $@"{AppDomain.CurrentDomain.BaseDirectory}\Изображения\{_i}.jpg");
+                        wc.DownloadFile(cwb.WB.Source, images_file + $@"{_i}.jpg");
                         _wsheet.Cells[_rowIdx, _imgCount + _i].Value = cwb.WB.Source.ToString();
                     }
                 }
@@ -67,16 +65,17 @@ namespace MISCA_App
             if (_isSizeInTable == true)
             {
                 string size_str = string.Empty;
-                for (int i = 1; i <= size_table.Columns.Count; i++)
+
+                for (int j = 2; j <= size_table.Items.Count; j++)
                 {
-                    for (int j = 1; j <= size_table.Items.Count; j++)
+                    for (int i = 1; i <= size_table.Columns.Count; i++)
                     {
                         //ПОлучение значения из ячйки
                         size_str +=
-                            $"{size_table.Columns[i - 1].Header}-{(size_table.Columns[i - 1].GetCellContent(size_table.Items[j - 1]) as TextBlock)?.Text}см, ";
+                        $"{size_table.Columns[i - 1].Header}-{(size_table.Columns[i - 1].GetCellContent(size_table.Items[j - 1]) as TextBlock).Text}см, ";
                     }
 
-                    size_str = $"{size_str.Remove(size_str.Length - 1, 1)}\n";
+                    size_str = $"{(size_table.Columns[0].GetCellContent(size_table.Items[j - 1]) as TextBlock).Text + " - " + size_str.Remove(size_str.Length - 1, 1)}\n";
                 }
 
                 _wsheet.Cells[_rowIdx, 7].Value = size_str;
@@ -89,13 +88,65 @@ namespace MISCA_App
             _wsheet.Cells[_rowIdx, 10].Value = ship.Content;
             _wsheet.Cells[1, 18].Value = _cny;
             _wbook.Save();
+
+            if (inst_checkbox.IsChecked == true)
+            {
+                string user = Config.Read("username", "instagram");
+                string pass = Config.Read("password", "instagram");
+                string img_path = images_file + "\\main.jpg";
+                string descr = name.Text + "\n" + price.Text;
+                InstargamUpload.UploadImage(user, pass, img_path, descr);
+            }
+
             addGoods();
             link.Focus();
         }
 
-        //catch (System.Runtime.InteropServices.COMException)
-        //{
-        //    MessageBox.Show("Произошла ошибка");
-        //}
+        static DataSet Parse(string fileName)
+        {
+            string connectionString = string.Format("provider=Microsoft.ACE.OLEDB.12.0; data source={0};Extended Properties=Excel 8.0;", fileName);
+
+            DataSet data = new DataSet();
+
+            foreach (var sheetName in GetExcelSheetNames(connectionString))
+            {
+                using (OleDbConnection con = new OleDbConnection(connectionString))
+                {
+                    var dataTable = new DataTable();
+                    string query = string.Format("SELECT * FROM [{0}]", sheetName);
+                    con.Open();
+                    OleDbDataAdapter adapter = new OleDbDataAdapter(query, con);
+                    adapter.Fill(dataTable);
+                    data.Tables.Add(dataTable);
+                }
+            }
+
+            return data;
+        }
+
+        static string[] GetExcelSheetNames(string connectionString)
+        {
+            OleDbConnection con = null;
+            DataTable dt = null;
+            con = new OleDbConnection(connectionString);
+            con.Open();
+            dt = con.GetOleDbSchemaTable(OleDbSchemaGuid.Tables, null);
+
+            if (dt == null)
+            {
+                return null;
+            }
+
+            String[] excelSheetNames = new String[dt.Rows.Count];
+            int i = 0;
+
+            foreach (DataRow row in dt.Rows)
+            {
+                excelSheetNames[i] = row["TABLE_NAME"].ToString();
+                i++;
+            }
+
+            return excelSheetNames;
+        }
     }
 }

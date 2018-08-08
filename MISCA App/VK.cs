@@ -3,7 +3,9 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Data;
 using System.Windows;
+using System.Windows.Controls;
 using VkNet.Model.Attachments;
 using VkNet.Model.RequestParams;
 using Microsoft.Office.Interop.Excel;
@@ -13,13 +15,15 @@ namespace MISCA_App
 {
     public partial class MainWindow : System.Windows.Window
     {
+        long group_id = Convert.ToInt64(Config.Read("group_id", "vk"));
+
         private void addGoods()
         {
             WebClient extra_wc;
             string extra_img;
             ReadOnlyCollection<Photo> id;
 
-            var uploadServer = _vk.Photo.GetMarketUploadServer(46499802, true, 49, 89, 700);
+            var uploadServer = _vk.Photo.GetMarketUploadServer(group_id, true, 49, 89, 700);
             var wc = new WebClient();
             ReadOnlyCollection<Photo> photo;
             String responseImg;
@@ -28,8 +32,8 @@ namespace MISCA_App
             try
             {
                 responseImg = Encoding.ASCII.GetString(wc.UploadFile(uploadServer.UploadUrl,
-                    AppDomain.CurrentDomain.BaseDirectory + @"\Изображения\main.jpg"));
-                photo = _vk.Photo.SaveMarketPhoto(46499802, responseImg);
+                    images_file + @"\main.jpg"));
+                photo = _vk.Photo.SaveMarketPhoto(group_id, responseImg);
                 wc.Dispose();
             }
             catch (Exception e)
@@ -50,8 +54,8 @@ namespace MISCA_App
                 {
                     extra_wc = new WebClient();
                     extra_img = Encoding.ASCII.GetString(extra_wc.UploadFile(uploadServer.UploadUrl,
-                        AppDomain.CurrentDomain.BaseDirectory + @"\Изображения\" + _count + ".jpg"));
-                    id = _vk.Photo.SaveMarketPhoto(46499802, extra_img);
+                        images_file + _count + ".jpg"));
+                    id = _vk.Photo.SaveMarketPhoto(group_id, extra_img);
                     _extraPhotos[_count - 1] = id.FirstOrDefault().Id.Value;
                     wc.Dispose();
                     _count++;
@@ -87,7 +91,7 @@ namespace MISCA_App
             {
                 add = _vk.Markets.Add(new MarketProductParams
                 {
-                    OwnerId = -46499802,
+                    OwnerId = -group_id,
                     CategoryId = _catId,
                     MainPhotoId = photo.FirstOrDefault().Id.Value,
                     Deleted = false,
@@ -107,7 +111,7 @@ namespace MISCA_App
             try
             {
                 _albumId.Add((Convert.ToInt64((_wsheet.Cells[2, 3] as Range).Value)));
-                _vk.Markets.AddToAlbum(ownerId: -46499802, itemId: add, albumIds: _albumId);
+                _vk.Markets.AddToAlbum(ownerId: -group_id, itemId: add, albumIds: _albumId);
             }
             catch (Exception e)
             {
@@ -136,6 +140,64 @@ namespace MISCA_App
             {
                 file.Delete();
             }
+        }
+
+        private void save_available_Click(object sender, RoutedEventArgs e)
+        {
+            DataGrid dg = sender as DataGrid;
+            string descr = string.Empty;
+            bool is_del = false;
+
+            foreach (DataRowView row in dg.Items)
+            {
+                try
+                {
+                    if (row["Статус"].ToString() == "0")
+                        is_del = true;
+                    else { is_del = false; }
+
+                    if (row["Статус"].ToString() == "0" || _arts_edited.Contains(row["Артикул"].ToString()))
+                    {
+
+                        var search_items = _vk.Markets.Search(new MarketSearchParams
+                        {
+                            OwnerId = -group_id,
+                            Query = row["Наименование"].ToString()
+                        });
+
+
+                        if (row["Материал"].ToString() != string.Empty)
+                            descr += "Материал: " + row["Материал"].ToString() + "\n";
+
+                        if (row["Размеры"].ToString() != string.Empty)
+                        {
+                            if (row["Размеры"].ToString().Length > 50)
+                                descr += "Размеры: " + "\n" + row["Размеры"].ToString() + "\n";
+                            else
+                                descr += "Размеры: " + row["Размеры"].ToString() + "\n";
+                        }
+
+                        foreach (var item in search_items)
+                        {
+                            var edit = _vk.Markets.Edit(new MarketProductParams
+                            {
+                                OwnerId = 0-group_id,
+                                ItemId = item.Id,
+                                Deleted = is_del,
+                                Name = row["Наименование"].ToString() + " " + row["Артикул"].ToString(),
+                                Description = descr,
+                                Price = Convert.ToDecimal(row["Стоимость"]),
+                            });
+                        }
+                    }
+                }
+                catch
+                {
+                    MessageBox.Show("Произошла ошибка при снятии с продажи товара" + row["Наименование"].ToString());
+                    continue;
+                }
+            }
+            MessageBox.Show("Товары успешно сняты с продажи");
         }
     }
 }

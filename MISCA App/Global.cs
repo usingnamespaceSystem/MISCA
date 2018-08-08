@@ -24,9 +24,11 @@ namespace MISCA_App
         private readonly List<long> _albumId = new List<long>();
         private readonly List<CheckingWB> _images = new List<CheckingWB>();
         private string[] _keyWords = new string[10];
+        private  List<string> _arts_edited = new List<string>();
 
         private double _cny;
-        private string _imagesHidden = string.Empty;
+        private string _imagesHidden = string.Empty,
+            _category_for_stock = string.Empty;
 
         private bool _isload = true,
             _ismain,
@@ -46,17 +48,19 @@ namespace MISCA_App
         private readonly NotifyIcon _nf = new NotifyIcon();
         static readonly Microsoft.Office.Interop.Excel.Application App;
 
-        private static readonly string WbookPath = Config.Read("products", "app");
-        private static readonly string WbookAgentsPath = Config.Read("agents", "app");
-        private static readonly string ImagesPath = Config.Read("images", "app");
+        private static readonly string product_file = Config.Read("products", "app");
+        private static readonly string agent_file = Config.Read("agents", "app");
+        private static readonly string images_file = Config.Read("images", "app");
+        private static readonly string order_file = Config.Read("orders", "app");
+        private static readonly string orders_sheet = Config.Read("orders_sheet", "app");
 
-        private readonly Microsoft.Office.Interop.Excel.Workbook _wbook = App.Workbooks.Open(WbookPath);
-        private readonly Microsoft.Office.Interop.Excel.Workbook _wbookAgents = App.Workbooks.Open(WbookAgentsPath);
+        private readonly Microsoft.Office.Interop.Excel.Workbook _wbook = App.Workbooks.Open(product_file);
+        private readonly Microsoft.Office.Interop.Excel.Workbook _wbookAgents = App.Workbooks.Open(agent_file);
 
         private Microsoft.Office.Interop.Excel.Worksheet _wsheet;
         private Microsoft.Office.Interop.Excel.Range _agentRow;
 
-        private readonly DirectoryInfo _dirInfo = new DirectoryInfo(ImagesPath);
+        private readonly DirectoryInfo _dirInfo = new DirectoryInfo(images_file);
 
         static MainWindow()
         {
